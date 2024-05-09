@@ -1,0 +1,32 @@
+{
+  "name": "kotamobil-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "rimraf dist && npx tsc",
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
+    "predev": "npm run build",
+    "dev": "concurrently \"npx tsc -w\" \"nodemon dist/index.js\" ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.11",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.4.5"
+  }
+}
