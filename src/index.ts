@@ -1,4 +1,5 @@
-import express, { Express, Request, Response } from 'express';
+import express from 'express';
+import http from 'http';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -6,15 +7,25 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const PORT = process.env.PORT;
+async function startServer() {
+  try {
+    const PORT = process.env.PORT;
 
-const App = express();
+    const api = express();
 
-App.use(bodyParser.urlencoded({ extended: true }));
-App.use(bodyParser.json());
-App.use(cors());
-App.use(morgan('dev'));
+    api.use(bodyParser.urlencoded({ extended: true }));
+    api.use(bodyParser.json());
+    api.use(cors());
+    api.use(morgan('dev'));
 
-App.listen(PORT, () => {
-  console.log(`Running on port ${PORT}`);
-});
+    const server = http.createServer(api);
+
+    server.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}/`);
+    });
+  } catch (error) {
+    throw new Error(`Server Error: ${error}`);
+  }
+}
+
+startServer();
