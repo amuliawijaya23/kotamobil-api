@@ -1,6 +1,8 @@
 import express from 'express';
 import http from 'http';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
 import morgan from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -13,10 +15,13 @@ async function startServer() {
 
     const api = express();
 
+    api.use(cors({ credentials: true }));
+    api.use(morgan('dev'));
+
+    api.use(compression());
     api.use(bodyParser.urlencoded({ extended: true }));
     api.use(bodyParser.json());
-    api.use(cors());
-    api.use(morgan('dev'));
+    api.use(cookieParser());
 
     const server = http.createServer(api);
 
