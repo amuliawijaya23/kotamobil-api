@@ -131,3 +131,32 @@ export const deleteUser = async (request: Request, response: Response) => {
     response.sendStatus(400);
   }
 };
+
+export const updateUser = async (request: Request, response: Response) => {
+  try {
+    const { id } = request.params;
+
+    const { firstName, lastName } = request.body;
+
+    if (!firstName || !lastName) {
+      return response.sendStatus(400);
+    }
+
+    const user = await getUserById(id);
+
+    if (firstName) {
+      user.firstName = firstName;
+    }
+
+    if (lastName) {
+      user.lastName = lastName;
+    }
+
+    await user.save();
+
+    response.status(200).json(user).end();
+  } catch (error) {
+    console.log(error);
+    response.sendStatus(400);
+  }
+};
