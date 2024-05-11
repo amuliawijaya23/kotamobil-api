@@ -5,8 +5,10 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import morgan from 'morgan';
 import cors from 'cors';
-import dotenv from 'dotenv';
+import dbConnect from './db';
+import router from './router';
 
+import dotenv from 'dotenv';
 dotenv.config();
 
 async function startServer() {
@@ -28,6 +30,10 @@ async function startServer() {
     server.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}/`);
     });
+
+    await dbConnect();
+
+    api.use('/', router());
   } catch (error) {
     throw new Error(`Server Error: ${error}`);
   }
