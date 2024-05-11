@@ -6,7 +6,7 @@ import compression from 'compression';
 import morgan from 'morgan';
 import cors from 'cors';
 import dbConnect from './db';
-import router from './router';
+import router from './routers';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -25,6 +25,8 @@ async function startServer() {
     api.use(bodyParser.json());
     api.use(cookieParser());
 
+    api.use('/', router());
+
     const server = http.createServer(api);
 
     server.listen(PORT, () => {
@@ -32,8 +34,6 @@ async function startServer() {
     });
 
     await dbConnect();
-
-    api.use('/', router());
   } catch (error) {
     throw new Error(`Server Error: ${error}`);
   }

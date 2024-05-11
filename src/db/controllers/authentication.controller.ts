@@ -34,10 +34,14 @@ export const login = async (request: Request, response: Response) => {
 
     await user.save();
 
-    response.cookie('kotamobil-session', user.authentication.sessionToken, {
-      domain: 'localhost',
-      path: '/',
-    });
+    response.cookie(
+      'KOTAMOBIL-SESSION-AUTH',
+      user.authentication.sessionToken,
+      {
+        domain: 'localhost',
+        path: '/',
+      },
+    );
 
     return response.status(200).json(user).end();
   } catch (error) {
