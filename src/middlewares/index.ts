@@ -47,7 +47,26 @@ export const isOwner = async (
       return response.sendStatus(403);
     }
 
-    next();
+    return next();
+  } catch (error) {
+    console.log(error);
+    return response.sendStatus(400);
+  }
+};
+
+export const isUnauthenticated = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const sessionToken = request.cookies['KOTAMOBIL-SESSION-AUTH'];
+
+    if (sessionToken) {
+      return response.sendStatus(403);
+    }
+
+    return next();
   } catch (error) {
     console.log(error);
     return response.sendStatus(400);

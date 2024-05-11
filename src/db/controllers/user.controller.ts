@@ -128,7 +128,7 @@ export const deleteUser = async (request: Request, response: Response) => {
     return response.status(200).json(deletedUser).end();
   } catch (error) {
     console.log(error);
-    response.sendStatus(400);
+    return response.sendStatus(400);
   }
 };
 
@@ -154,9 +154,9 @@ export const updateUser = async (request: Request, response: Response) => {
 
     await user.save();
 
-    response.status(200).json(user).end();
+    return response.status(200).json(user).end();
   } catch (error) {
     console.log(error);
-    response.sendStatus(400);
+    return response.sendStatus(400);
   }
 };
