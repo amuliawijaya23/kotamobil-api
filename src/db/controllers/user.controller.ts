@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { userInfo } from 'os';
 
 import { random, authentication } from '../../lib/authentication';
 import {
