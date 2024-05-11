@@ -5,6 +5,7 @@ import {
   getUserByEmail,
   createUser,
   getUserById,
+  deleteUserById,
 } from '../actions/user.action';
 
 export const login = async (request: Request, response: Response) => {
@@ -115,5 +116,18 @@ export const logout = async (request: Request, response: Response) => {
   } catch (error) {
     console.log(error);
     return response.sendStatus(400);
+  }
+};
+
+export const deleteUser = async (request: Request, response: Response) => {
+  try {
+    const { id } = request.params;
+
+    const deletedUser = await deleteUserById(id);
+
+    return response.status(200).json(deletedUser).end();
+  } catch (error) {
+    console.log(error);
+    response.sendStatus(400);
   }
 };
