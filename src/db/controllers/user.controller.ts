@@ -1,7 +1,12 @@
 import { Request, Response } from 'express';
+import { userInfo } from 'os';
 
 import { random, authentication } from '../../lib/authentication';
-import { getUserByEmail, createUser } from '../actions/user.action';
+import {
+  getUserByEmail,
+  createUser,
+  getUserById,
+} from '../actions/user.action';
 
 export const login = async (request: Request, response: Response) => {
   try {
@@ -76,6 +81,38 @@ export const register = async (request: Request, response: Response) => {
     });
 
     return response.status(200).json(user).end();
+  } catch (error) {
+    console.log(error);
+    return response.sendStatus(400);
+  }
+};
+
+export const logout = async (request: Request, response: Response) => {
+  try {
+    const { id } = request.params;
+
+    if (!id) {
+      return response.sendStatus(400);
+    }
+
+    const currentUser = await getUserById(id).select(
+      '+authentication.salt +authentication.password +authentication.sessionToken',
+    );
+
+    if (!currentUser) {
+      return response.sendStatus(400);
+    }
+
+    const user = currentUser;
+    delete user.authentication.sessionToken;
+
+    currentUser.authentication = { ...user.authentication };
+
+    await currentUser.save();
+
+    response.clearCookie('KOTAMOBIL-SESSION-AUTH');
+
+    response.status(200).json(user).end();
   } catch (error) {
     console.log(error);
     return response.sendStatus(400);
