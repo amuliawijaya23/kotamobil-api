@@ -20,7 +20,7 @@ const listingSchema = new Schema({
   price: { type: Number, required: true },
   creditPrice: Number,
   marketPrice: Number,
-  owner: { type: String, ref: 'User' },
+  ownerId: { type: String, ref: 'User' },
   dateAdded: { type: Date, default: Date.now(), required: true },
   dateSold: Date,
 });

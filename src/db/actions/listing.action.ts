@@ -1,7 +1,7 @@
 import Listing from '../models/listing.model';
 
 const getListings = () => Listing.find();
-const getUserListings = (id: string) => Listing.find({ owner: id });
+const getUserListings = (id: string) => Listing.find({ ownerId: id });
 const queryListings = (param: { $and: [Object[]] }) =>
   Listing.find({ ...param });
 const createListing = (values: Record<string | number, any>) =>
