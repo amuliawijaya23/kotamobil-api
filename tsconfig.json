@@ -14,11 +14,7 @@
     "strict": true,
     "noImplicitAny": true,
     "paths": {
-      "@db/*": ["./src/db/*"],
-      "@auth/*": ["./src/auth/*"],
-      "@lib/*": ["./src/lib/*"],
-      "@middlewares/*": ["./src/middleware/*"],
-      "@routers/*": ["./src/routers/*"]
+      "~/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],

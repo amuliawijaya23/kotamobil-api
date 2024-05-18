@@ -11,7 +11,7 @@ import session from 'express-session';
 import passport from 'passport';
 
 import dbConnect from './db';
-import initializePassport from '@auth/passport-config';
+import initializePassport from '~/auth/passport-config';
 
 import dotenv from 'dotenv';
 dotenv.config();

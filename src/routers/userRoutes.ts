@@ -4,9 +4,9 @@ import {
   register,
   deleteUser,
   updateUser,
-} from '@db/controllers/user.controller';
+} from '~/db/controllers/user.controller';
 
-import { login, logout } from '@auth/index';
+import { login, logout } from '~/auth/index';
 
 import { isAuthenticated, isNotAuthenticated } from '../middlewares';
 

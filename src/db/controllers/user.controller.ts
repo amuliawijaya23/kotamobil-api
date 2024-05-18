@@ -6,7 +6,7 @@ import {
   createUser,
   getUserById,
   deleteUserById,
-} from '@db/actions/user.action';
+} from '~/db/actions/user.action';
 
 export const register = async (request: Request, response: Response) => {
   try {

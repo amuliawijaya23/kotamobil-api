@@ -2,7 +2,7 @@ import passport from 'passport';
 import Local from 'passport-local';
 import bcrypt from 'bcrypt';
 
-import { getUserByEmail, getUserById } from '@db/actions/user.action';
+import { getUserByEmail, getUserById } from '~/db/actions/user.action';
 
 const LocalStrategy = Local.Strategy;
 

@@ -1,4 +1,4 @@
-import Listing from '@db/models/listing.model';
+import Listing from '~/db/models/listing.model';
 
 const getListings = () => Listing.find();
 const getUserListings = (id: string) => Listing.find({ ownerId: id });

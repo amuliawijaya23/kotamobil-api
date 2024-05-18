@@ -7,7 +7,7 @@ import {
   createListing,
   deleteListingById,
   updateListingById,
-} from '@db/actions/listing.action';
+} from '~/db/actions/listing.action';
 
 export const allListings = async (request: Request, response: Response) => {
   try {
