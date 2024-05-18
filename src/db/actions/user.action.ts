@@ -12,7 +12,6 @@ const updateUserById = (id: string, values: Record<string, any>) =>
 export {
   getUsers,
   getUserByEmail,
-  getUserBySessionToken,
   getUserById,
   createUser,
   deleteUserById,
