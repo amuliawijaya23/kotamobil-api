@@ -6,6 +6,14 @@ import { getUserByEmail, getUserById } from '~/db/actions/user.action';
 
 const LocalStrategy = Local.Strategy;
 
+declare global {
+  namespace Express {
+    interface User {
+      _id: string;
+    }
+  }
+}
+
 const initializePassport = () => {
   passport.use(
     new LocalStrategy(
@@ -41,7 +49,7 @@ const initializePassport = () => {
   });
 
   passport.deserializeUser(async (id: string, done: Function) => {
-    return done(null, await getUserById(id));
+    return done(null, (await getUserById(id)).toObject());
   });
 };
 export default initializePassport;

@@ -11,7 +11,9 @@ const createListing = (values: Record<string | number, any>) =>
 const deleteListingById = (id: string) =>
   Listing.findByIdAndDelete({ _id: id });
 const updateListingById = (id: string, values: Record<string | number, any>) =>
-  Listing.findByIdAndUpdate({ _id: id }, values);
+  Listing.findByIdAndUpdate({ _id: id }, values).then(
+    (listing: Record<string | number, any>) => listing.toObject(),
+  );
 
 export {
   getListings,

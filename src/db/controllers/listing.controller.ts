@@ -9,7 +9,7 @@ import {
   updateListingById,
 } from '~/db/actions/listing.action';
 
-export const allListings = async (request: Request, response: Response) => {
+export const getAllListings = async (request: Request, response: Response) => {
   try {
     const listings = await getListings();
 
@@ -20,41 +20,45 @@ export const allListings = async (request: Request, response: Response) => {
   }
 };
 
-export const myListings = async (request: Request, response: Response) => {
+export const getMyListings = async (request: Request, response: Response) => {
   try {
-    const { id } = request.params;
+    const user = request.user;
 
-    const listings = await getUserListings(id);
+    if (!user) {
+      return response.status(401).json({ message: 'Not authorized' }).end();
+    }
+
+    const listings = await getUserListings(user._id);
 
     return response.status(200).json(listings).end();
   } catch (error) {
     console.log(error);
-    response.sendStatus(400);
+    response.sendStatus(500);
   }
 };
 
-export const newListing = async (request: Request, response: Response) => {
+export const addListing = async (request: Request, response: Response) => {
   try {
     const formData = request.body;
 
     if (
-      formData.name ||
-      formData.vin ||
-      formData.make ||
-      formData.model ||
-      formData.year ||
-      formData.odometer ||
-      formData.color ||
-      formData.condition ||
-      formData.plateNumber ||
-      formData.assembly ||
-      formData.transmission ||
-      formData.fuelType ||
-      formData.taxDate ||
-      formData.price ||
-      formData.dateAdded
+      !formData.name ||
+      !formData.vin ||
+      !formData.make ||
+      !formData.model ||
+      !formData.year ||
+      !formData.odometer ||
+      !formData.color ||
+      !formData.condition ||
+      !formData.plateNumber ||
+      !formData.assembly ||
+      !formData.transmission ||
+      !formData.fuelType ||
+      !formData.taxDate ||
+      !formData.price ||
+      !formData.dateAdded
     ) {
-      response.sendStatus(400);
+      response.status(400).json({ message: 'Missing parameter' }).end();
     }
 
     const listing = await createListing({
@@ -64,7 +68,7 @@ export const newListing = async (request: Request, response: Response) => {
     return response.status(200).json(listing).end();
   } catch (error) {
     console.log(error);
-    response.sendStatus(400);
+    response.sendStatus(500);
   }
 };
 
