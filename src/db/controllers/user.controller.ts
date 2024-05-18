@@ -15,14 +15,16 @@ export const register = async (request: Request, response: Response) => {
     if (!email || !firstName || !password) {
       return response
         .status(400)
-        .json({ error: 'Missing required parameter' })
+        .json({ message: 'Missing required parameter' })
         .end();
     }
 
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      response.sendStatus(400);
+      response
+        .status(403)
+        .json({ message: 'A user with that email already exist' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -48,7 +50,7 @@ export const deleteUser = async (request: Request, response: Response) => {
     if (!id) {
       return response
         .status(400)
-        .json({ error: 'Missing required parameter' })
+        .json({ message: 'Missing required parameter' })
         .end();
     }
 
@@ -68,7 +70,7 @@ export const updateUser = async (request: Request, response: Response) => {
     if (!id) {
       return response
         .status(400)
-        .json({ error: 'Missing required Parameter' })
+        .json({ message: 'Missing required Parameter' })
         .end();
     }
 
@@ -77,7 +79,7 @@ export const updateUser = async (request: Request, response: Response) => {
     if (!firstName || !lastName) {
       return response
         .status(400)
-        .json({ error: 'Missing required Parameter' })
+        .json({ message: 'Missing required Parameter' })
         .end();
     }
 
