@@ -13,7 +13,7 @@ import { isAuthenticated, isNotAuthenticated } from '../middlewares';
 export default (router: Router) => {
   router.post('/auth/register', isNotAuthenticated, register);
   router.post('/auth/login', isNotAuthenticated, login);
-  router.delete('/auth/logout/:id', isAuthenticated, logout);
+  router.delete('/auth/logout', isAuthenticated, logout);
   router.delete('/auth/delete/:id', isAuthenticated, deleteUser);
   router.patch('/auth/update/:id', isAuthenticated, updateUser);
 };

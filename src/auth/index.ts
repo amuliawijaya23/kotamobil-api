@@ -10,13 +10,17 @@ export const login = [
   passport.authenticate('local', {
     successReturnToOrRedirect: CLIENT_URL,
     failureRedirect: `${CLIENT_URL}/login`,
+    passReqToCallback: true,
     failureFlash: true,
   }),
   (request: Request, response: Response) => {
-    response.json({
-      isAuthenticated: request.isAuthenticated(),
-      user: request.user,
-    });
+    return response
+      .status(200)
+      .json({
+        isAuthenticated: request.isAuthenticated(),
+        user: request.user,
+      })
+      .end();
   },
 ];
 
