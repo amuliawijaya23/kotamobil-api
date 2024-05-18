@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { get, merge } from 'lodash';
 
-import { getUserBySessionToken } from '../db/actions/user.action';
+const CLIENT_URL = process.env.CLIENT_URL;
 
 export const isAuthenticated = async (
   request: Request,
@@ -9,24 +8,29 @@ export const isAuthenticated = async (
   next: NextFunction,
 ) => {
   try {
-    const sessionToken = request.cookies['KOTAMOBIL-SESSION-AUTH'];
-
-    if (!sessionToken) {
-      return response.sendStatus(403);
+    if (!request.isAuthenticated()) {
+      return response.redirect(`${CLIENT_URL}/login`);
     }
-
-    const existingUser = await getUserBySessionToken(sessionToken);
-
-    if (!existingUser) {
-      return response.sendStatus(403);
-    }
-
-    merge(request, { identity: existingUser });
-
     return next();
   } catch (error) {
     console.log(error);
-    return response.sendStatus(400);
+    return response.sendStatus(500);
+  }
+};
+
+export const isNotAuthenticated = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (request.isAuthenticated()) {
+      return response.redirect(`${CLIENT_URL}`);
+    }
+    return next();
+  } catch (error) {
+    console.log(error);
+    return response.sendStatus(500);
   }
 };
 
@@ -36,39 +40,8 @@ export const isOwner = async (
   next: NextFunction,
 ) => {
   try {
-    const { id } = request.params;
-    const currentUserId = get(request, 'identity._id') as string | undefined;
-
-    if (!currentUserId) {
-      return response.sendStatus(403);
-    }
-
-    if (currentUserId.toString() !== id) {
-      return response.sendStatus(403);
-    }
-
-    return next();
   } catch (error) {
     console.log(error);
-    return response.sendStatus(400);
-  }
-};
-
-export const isUnauthenticated = async (
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) => {
-  try {
-    const sessionToken = request.cookies['KOTAMOBIL-SESSION-AUTH'];
-
-    if (sessionToken) {
-      return response.sendStatus(403);
-    }
-
-    return next();
-  } catch (error) {
-    console.log(error);
-    return response.sendStatus(400);
+    return response.sendStatus(500);
   }
 };
