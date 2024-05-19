@@ -9,10 +9,14 @@ const createListing = (values: Record<string | number, any>) =>
     .save()
     .then((listing: Record<string | number, any>) => listing.toObject());
 const deleteListingById = (id: string) =>
-  Listing.findByIdAndDelete({ _id: id });
+  Listing.findByIdAndDelete({ _id: id }).then(
+    (listing: Record<string | number, any>) =>
+      listing ? listing.toObject() : listing,
+  );
 const updateListingById = (id: string, values: Record<string | number, any>) =>
   Listing.findByIdAndUpdate({ _id: id }, values).then(
-    (listing: Record<string | number, any>) => listing.toObject(),
+    (listing: Record<string | number, any>) =>
+      listing ? listing.toObject() : listing,
   );
 
 export {

@@ -63,6 +63,7 @@ export const addListing = async (request: Request, response: Response) => {
 
     const listing = await createListing({
       ...formData,
+      ownerId: request.user?._id,
       sold: false,
     });
     return response.status(200).json(listing).end();
@@ -78,10 +79,17 @@ export const deleteListing = async (request: Request, response: Response) => {
 
     const deletedListing = await deleteListingById(id);
 
+    if (!deletedListing) {
+      return response
+        .status(400)
+        .json({ message: 'No listing with that id' })
+        .end();
+    }
+
     return response.status(200).json(deletedListing).end();
   } catch (error) {
     console.log(error);
-    response.sendStatus(400);
+    response.sendStatus(500);
   }
 };
 
@@ -108,15 +116,22 @@ export const updateListing = async (request: Request, response: Response) => {
       ('price' in formData && !formData.price) ||
       ('dateAdded' in formData && !formData.dateAdded)
     ) {
-      response.sendStatus(400);
+      return response.status(400).json({ message: 'Missing parameter' }).end();
     }
 
     const updatedListing = await updateListingById(id, formData);
 
+    if (!updatedListing) {
+      return response
+        .status(400)
+        .json({ message: 'No listing with that id' })
+        .end();
+    }
+
     return response.status(200).json(updatedListing).end();
   } catch (error) {
     console.log(error);
-    response.sendStatus(400);
+    response.sendStatus(500);
   }
 };
 
