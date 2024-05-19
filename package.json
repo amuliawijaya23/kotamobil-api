@@ -22,7 +22,8 @@
     "prestart": "npm run build",
     "start": "node dist/index.js",
     "dev": "nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "ts-node ./src/db/seeds/index.ts"
   },
   "author": "",
   "license": "ISC",

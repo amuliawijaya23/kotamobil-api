@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const listingSchema = new Schema({
+export const listingSchema = new Schema({
   name: { type: String, required: true },
   coverImage: String,
   images: [String],
@@ -12,7 +12,7 @@ const listingSchema = new Schema({
   odometer: { type: Number, required: true },
   color: { type: String, required: true },
   condition: { type: String, required: true },
-  plateNumber: { type: String, required: true },
+  plateNumber: String,
   assembly: { type: String, required: true },
   transmission: { type: String, required: true },
   fuelType: { type: String, required: true },
