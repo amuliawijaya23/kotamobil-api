@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const listingSchema = new Schema({
+export const listingSchema = new Schema({
   name: { type: String, required: true },
   coverImage: String,
   images: [String],
