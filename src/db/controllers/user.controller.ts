@@ -74,9 +74,9 @@ export const updateUser = async (request: Request, response: Response) => {
         .end();
     }
 
-    const { firstName, lastName } = request.body;
+    const { firstName, lastName, picture } = request.body;
 
-    if (!firstName || !lastName) {
+    if (!firstName || !lastName || !picture) {
       return response
         .status(400)
         .json({ message: 'Missing required Parameter' })
@@ -87,6 +87,7 @@ export const updateUser = async (request: Request, response: Response) => {
 
     if (firstName) user.firstName = firstName;
     if (lastName) user.lastName = lastName;
+    if (picture) user.picture = picture;
 
     await user.save();
 
