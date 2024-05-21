@@ -4,25 +4,31 @@ import passport from 'passport';
 
 dotenv.config();
 
-const CLIENT_URL = process.env.CLIENT_URL;
+export const login = (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { email, password } = request.body;
 
-export const login = [
-  passport.authenticate('local', {
-    successReturnToOrRedirect: CLIENT_URL,
-    failureRedirect: `${CLIENT_URL}/login`,
-    passReqToCallback: true,
-    failureFlash: true,
-  }),
-  (request: Request, response: Response) => {
-    return response
-      .status(200)
-      .json({
-        isAuthenticated: request.isAuthenticated(),
-        user: request.user,
-      })
-      .end();
-  },
-];
+  if (!email || !password) {
+    return response.status(400).json({ message: 'Invalid Credentials' }).end();
+  }
+
+  passport.authenticate(
+    'local',
+    { session: true },
+    (error: Error, user: Express.User) => {
+      if (error) {
+        return response.status(400).json({ message: error }).end();
+      }
+
+      request.login(user, async () => {
+        response.status(200).json({ isAuthenticated: true, user }).end();
+      });
+    },
+  )(request, response, next);
+};
 
 export const logout = async (
   request: Request,
@@ -33,6 +39,6 @@ export const logout = async (
     if (error) {
       return next(error);
     }
-    return next();
+    return response.status(200).end();
   });
 };
