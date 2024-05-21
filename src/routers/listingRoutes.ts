@@ -9,8 +9,8 @@ import {
 import { isAuthenticated } from '~/middlewares';
 
 export default (router: Router) => {
-  router.post('/listing/add', addListing);
-  router.get('/listing', isAuthenticated, getMyListings);
-  router.post('/listing/update/:id', updateListing);
-  router.delete('/listing/delete/:id', deleteListing);
+  router.post('/api/listing/add', addListing);
+  router.get('/api/listing', isAuthenticated, getMyListings);
+  router.post('/api/listing/update/:id', updateListing);
+  router.delete('/api/listing/delete/:id', deleteListing);
 };
