@@ -41,7 +41,7 @@ const initializePassport = () => {
             });
           }
 
-          return done(null, user);
+          return done(null, user.toObject());
         } catch (error) {
           return done(error);
         }
