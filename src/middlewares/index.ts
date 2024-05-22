@@ -9,7 +9,7 @@ export const isAuthenticated = async (
 ) => {
   try {
     if (!request.isAuthenticated()) {
-      return response.redirect(`${CLIENT_URL}/login`);
+      return response.status(401).json({ message: 'Unauthorized' }).end();
     }
     return next();
   } catch (error) {
@@ -25,7 +25,7 @@ export const isNotAuthenticated = async (
 ) => {
   try {
     if (request.isAuthenticated()) {
-      return response.redirect(`${CLIENT_URL}`);
+      return response.status(403).json({ message: 'Forbidden' }).end();
     }
     return next();
   } catch (error) {
