@@ -18,6 +18,9 @@ dotenv.config();
 
 const PORT = process.env.PORT || 8080;
 const SESSION_SECRET = process.env.SESSION_SECRET || 'SECRET';
+const COOKIE_NAME = process.env.COOKIE_NAME || 'SESSION';
+const env = process.env.NODE_ENV || 'development';
+const isLocal = env === 'development';
 
 async function startServer() {
   try {
@@ -33,7 +36,12 @@ async function startServer() {
     api.use(flash());
     api.use(
       session({
+        name: COOKIE_NAME,
         secret: SESSION_SECRET,
+        cookie: {
+          secure: !isLocal,
+          maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        },
         resave: false,
         saveUninitialized: false,
       }),

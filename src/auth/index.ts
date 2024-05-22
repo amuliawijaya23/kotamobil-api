@@ -24,7 +24,12 @@ export const login = (
       }
 
       request.login(user, async () => {
-        response.status(200).json({ isAuthenticated: true, user }).end();
+        const userData = { ...user };
+        delete userData.password;
+        return response
+          .status(200)
+          .json({ isAuthenticated: true, userData })
+          .end();
       });
     },
   )(request, response, next);
