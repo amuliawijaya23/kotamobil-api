@@ -22,7 +22,7 @@ export const register = async (request: Request, response: Response) => {
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      response
+      return response
         .status(403)
         .json({ message: 'A user with that email already exist' })
         .end();
