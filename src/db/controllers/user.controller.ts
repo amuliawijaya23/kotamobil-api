@@ -24,7 +24,8 @@ export const register = async (request: Request, response: Response) => {
     if (existingUser) {
       response
         .status(403)
-        .json({ message: 'A user with that email already exist' });
+        .json({ message: 'A user with that email already exist' })
+        .end();
     }
 
     const salt = await bcrypt.genSalt(10);
