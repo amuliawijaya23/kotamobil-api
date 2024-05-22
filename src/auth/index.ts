@@ -28,7 +28,7 @@ export const login = (
         delete userData.password;
         return response
           .status(200)
-          .json({ isAuthenticated: true, userData })
+          .json({ isAuthenticated: true, user: userData })
           .end();
       });
     },
