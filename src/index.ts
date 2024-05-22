@@ -39,7 +39,8 @@ async function startServer() {
         name: COOKIE_NAME,
         secret: SESSION_SECRET,
         cookie: {
-          secure: !isLocal,
+          secure: isLocal ? false : true,
+          httpOnly: false,
           maxAge: 24 * 60 * 60 * 1000, // 24 hours
         },
         resave: false,
