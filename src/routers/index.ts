@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
 import userRoutes from './userRoutes';
-import listingRoutes from './listingRoutes';
+import vehicleRoutes from './vehicleRoutes';
 
 const router = Router();
 
 export default (): Router => {
   userRoutes(router);
-  listingRoutes(router);
+  vehicleRoutes(router);
   return router;
 };

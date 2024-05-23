@@ -1,4 +1,4 @@
-const listingSeed = [
+const vehicleSeed = [
   {
     name: '2018 Honda HR-V',
     images: ['https://imgur.com/7lLUxJO'],
@@ -81,4 +81,4 @@ const listingSeed = [
   },
 ];
 
-export default listingSeed;
+export default vehicleSeed;

@@ -1,26 +1,26 @@
 import { Request, Response } from 'express';
 
 import {
-  getListings,
-  getUserListings,
-  queryListings,
-  createListing,
-  deleteListingById,
-  updateListingById,
-} from '~/db/actions/listing.action';
+  getVehicles,
+  getUserVehicles,
+  queryVehicles,
+  createVehicle,
+  deleteVehicleById,
+  updateVehicleById,
+} from '~/db/actions/vehicle.action';
 
-export const getAllListings = async (request: Request, response: Response) => {
+export const getAllVehicles = async (request: Request, response: Response) => {
   try {
-    const listings = await getListings();
+    const vehicles = await getVehicles();
 
-    return response.status(200).json(listings).end();
+    return response.status(200).json(vehicles).end();
   } catch (error) {
     console.log(error);
     response.sendStatus(400);
   }
 };
 
-export const getMyListings = async (request: Request, response: Response) => {
+export const getMyVehicles = async (request: Request, response: Response) => {
   try {
     const user = request.user;
 
@@ -28,16 +28,16 @@ export const getMyListings = async (request: Request, response: Response) => {
       return response.status(401).json({ message: 'Not authorized' }).end();
     }
 
-    const listings = await getUserListings(user._id);
+    const vehicles = await getUserVehicles(user._id);
 
-    return response.status(200).json(listings).end();
+    return response.status(200).json(vehicles).end();
   } catch (error) {
     console.log(error);
     response.sendStatus(500);
   }
 };
 
-export const addListing = async (request: Request, response: Response) => {
+export const addVehicle = async (request: Request, response: Response) => {
   try {
     const formData = request.body;
 
@@ -61,39 +61,39 @@ export const addListing = async (request: Request, response: Response) => {
       response.status(400).json({ message: 'Missing parameter' }).end();
     }
 
-    const listing = await createListing({
+    const vehicle = await createVehicle({
       ...formData,
       ownerId: request.user?._id,
       sold: false,
     });
-    return response.status(200).json(listing).end();
+    return response.status(200).json(vehicle).end();
   } catch (error) {
     console.log(error);
     response.sendStatus(500);
   }
 };
 
-export const deleteListing = async (request: Request, response: Response) => {
+export const deleteVehicle = async (request: Request, response: Response) => {
   try {
     const { id } = request.params;
 
-    const deletedListing = await deleteListingById(id);
+    const deletedVehicle = await deleteVehicleById(id);
 
-    if (!deletedListing) {
+    if (!deletedVehicle) {
       return response
         .status(400)
         .json({ message: 'No listing with that id' })
         .end();
     }
 
-    return response.status(200).json(deletedListing).end();
+    return response.status(200).json(deletedVehicle).end();
   } catch (error) {
     console.log(error);
     response.sendStatus(500);
   }
 };
 
-export const updateListing = async (request: Request, response: Response) => {
+export const updateVehicle = async (request: Request, response: Response) => {
   try {
     const { id } = request.params;
 
@@ -119,16 +119,16 @@ export const updateListing = async (request: Request, response: Response) => {
       return response.status(400).json({ message: 'Missing parameter' }).end();
     }
 
-    const updatedListing = await updateListingById(id, formData);
+    const updatedVehicle = await updateVehicleById(id, formData);
 
-    if (!updatedListing) {
+    if (!updatedVehicle) {
       return response
         .status(400)
         .json({ message: 'No listing with that id' })
         .end();
     }
 
-    return response.status(200).json(updatedListing).end();
+    return response.status(200).json(updatedVehicle).end();
   } catch (error) {
     console.log(error);
     response.sendStatus(500);

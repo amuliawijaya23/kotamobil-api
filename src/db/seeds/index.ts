@@ -1,8 +1,8 @@
 import mongoose, { connect } from 'mongoose';
-import Listing, { listingSchema } from '../models/listing.model';
+import Vehicle, { vehicleSchema } from '../models/vehicle.model';
 import dotenv from 'dotenv';
 
-import listingSeed from './listingSeed';
+import vehicleSeed from './vehicleSeed';
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ mongoose.connection.once('connected', async () => {
   await mongoose.connection.db.collection('listings').drop();
   console.log('Collection dropped');
 
-  await Listing.insertMany(listingSeed).then((listings) => {
+  await Vehicle.insertMany(vehicleSeed).then((vehicles) => {
     console.log('Database Seeded');
     mongoose.disconnect();
   });

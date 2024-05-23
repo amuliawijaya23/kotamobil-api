@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-export const listingSchema = new Schema({
+export const vehicleSchema = new Schema({
   name: { type: String, required: true },
   images: [String],
   vin: { type: String, required: true },
@@ -26,6 +26,6 @@ export const listingSchema = new Schema({
   dateSold: Date,
 });
 
-const Listing =
-  mongoose.models.Listing || mongoose.model('Listing', listingSchema);
-export default Listing;
+const Vehicle =
+  mongoose.models.Listing || mongoose.model('Vehicle', vehicleSchema);
+export default Vehicle;
