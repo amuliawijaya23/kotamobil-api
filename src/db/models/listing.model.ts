@@ -2,7 +2,6 @@ import mongoose, { Schema } from 'mongoose';
 
 export const listingSchema = new Schema({
   name: { type: String, required: true },
-  coverImage: String,
   images: [String],
   vin: { type: String, required: true },
   make: { type: String, required: true },
