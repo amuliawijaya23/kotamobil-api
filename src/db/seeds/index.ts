@@ -21,7 +21,7 @@ mongoose.connection.on('error', (error) => {
 });
 mongoose.connection.once('connected', async () => {
   console.log('Connected to MongoDB');
-  await mongoose.connection.db.collection('listings').drop();
+  await mongoose.connection.db.collection('vehicles').drop();
   console.log('Collection dropped');
 
   await Vehicle.insertMany(vehicleSeed).then((vehicles) => {

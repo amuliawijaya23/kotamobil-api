@@ -1,7 +1,7 @@
 const vehicleSeed = [
   {
     name: '2018 Honda HR-V',
-    images: ['https://imgur.com/7lLUxJO'],
+    images: ['https://i.imgur.com/7lLUxJO.jpg'],
     ownerId: '664e2a93b5eeebf38e2b8439',
     vin: '1HGBH41JXMN109186',
     make: 'Honda',
@@ -21,7 +21,7 @@ const vehicleSeed = [
   },
   {
     name: '2020 Toyota Agya',
-    images: ['https://imgur.com/CxD9KmS'],
+    images: ['https://i.imgur.com/CxD9KmS.jpg'],
     ownerId: '664e2a93b5eeebf38e2b8439',
     vin: '1J4GW48S62C134257',
     make: 'Toyota',
@@ -41,7 +41,7 @@ const vehicleSeed = [
   },
   {
     name: '2023 Toyota Alphard',
-    images: ['https://imgur.com/wifA4jf'],
+    images: ['https://i.imgur.com/wifA4jf.jpg'],
     ownerId: '664e2a93b5eeebf38e2b8439',
     vin: '3FAHP0GA9CR273266',
     make: 'Toyota',
@@ -61,7 +61,7 @@ const vehicleSeed = [
   },
   {
     name: '2023 Toyota FJ Cruiser',
-    images: ['https://imgur.com/a3IOqzk'],
+    images: ['https://i.imgur.com/a3IOqzk.jpg'],
     ownerId: '664e2a93b5eeebf38e2b8439',
     vin: '1N6BD06T55C486886',
     make: 'Toyota',
