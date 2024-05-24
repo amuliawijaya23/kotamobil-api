@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 
-const CLIENT_URL = process.env.CLIENT_URL;
+import dotenv from 'dotenv';
+dotenv.config();
+
+const COOKIE_NAME = process.env.COOKIE_NAME || 'SESSION';
 
 export const isAuthenticated = async (
   request: Request,
@@ -9,6 +12,9 @@ export const isAuthenticated = async (
 ) => {
   try {
     if (!request.isAuthenticated()) {
+      if (request.cookies) {
+        response.clearCookie(COOKIE_NAME);
+      }
       return response.status(401).json({ message: 'Unauthorized' }).end();
     }
     return next();
