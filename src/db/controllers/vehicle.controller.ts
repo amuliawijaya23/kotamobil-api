@@ -50,26 +50,24 @@ export const addVehicle = async (request: Request, response: Response) => {
       !formData.odometer ||
       !formData.color ||
       !formData.condition ||
-      !formData.plateNumber ||
       !formData.assembly ||
       !formData.transmission ||
       !formData.fuelType ||
-      !formData.taxDate ||
       !formData.price ||
-      !formData.dateAdded
+      !formData.dateAdded ||
+      !('sold' in formData)
     ) {
-      response.status(400).json({ message: 'Missing parameter' }).end();
+      return response.status(400).json({ message: 'Missing parameter' }).end();
     }
 
     const vehicle = await createVehicle({
       ...formData,
       ownerId: request.user?._id,
-      sold: false,
     });
     return response.status(200).json(vehicle).end();
   } catch (error) {
     console.log(error);
-    response.sendStatus(500);
+    return response.sendStatus(500);
   }
 };
 
@@ -89,7 +87,7 @@ export const deleteVehicle = async (request: Request, response: Response) => {
     return response.status(200).json(deletedVehicle).end();
   } catch (error) {
     console.log(error);
-    response.sendStatus(500);
+    return response.sendStatus(500);
   }
 };
 
@@ -108,11 +106,9 @@ export const updateVehicle = async (request: Request, response: Response) => {
       ('odometer' in formData && !formData.odometer) ||
       ('color' in formData && !formData.color) ||
       ('condition' in formData && !formData.condition) ||
-      ('plateNumber' in formData && !formData.plateNumber) ||
       ('assembly' in formData && !formData.assembly) ||
       ('transmission' in formData && !formData.transmission) ||
       ('fuelType' in formData && !formData.fuelType) ||
-      ('taxDate' in formData && !formData.taxDate) ||
       ('price' in formData && !formData.price) ||
       ('dateAdded' in formData && !formData.dateAdded)
     ) {
@@ -131,7 +127,7 @@ export const updateVehicle = async (request: Request, response: Response) => {
     return response.status(200).json(updatedVehicle).end();
   } catch (error) {
     console.log(error);
-    response.sendStatus(500);
+    return response.sendStatus(500);
   }
 };
 

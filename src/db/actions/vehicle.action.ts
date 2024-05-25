@@ -1,7 +1,8 @@
 import Vehicle from '~/db/models/vehicle.model';
 
 const getVehicles = () => Vehicle.find();
-const getUserVehicles = (id: string) => Vehicle.find({ ownerId: id });
+const getUserVehicles = (id: string) =>
+  Vehicle.find({ ownerId: id }).sort({ dateAdded: -1 });
 const queryVehicles = (param: { $and: [Object[]] }) =>
   Vehicle.find({ ...param });
 const createVehicle = (values: Record<string | number, any>) =>
