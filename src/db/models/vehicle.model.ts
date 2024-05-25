@@ -21,6 +21,8 @@ export const vehicleSchema = new Schema({
   price: { type: Number, required: true },
   creditPrice: Number,
   marketPrice: Number,
+  purchasePrice: Number,
+  soldPrice: Number,
   ownerId: { type: String, ref: 'User' },
   dateAdded: { type: Date, default: Date.now(), required: true },
   dateSold: Date,

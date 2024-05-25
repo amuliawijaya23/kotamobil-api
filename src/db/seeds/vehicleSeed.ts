@@ -17,6 +17,8 @@ const vehicleSeed = [
     taxDate: 'Sun Jun 30 2024 02:11:13 GMT+0700 (Western Indonesia Time)',
     price: 276000000,
     dateAdded: 'Sun Feb 25 2024 07:00:00 GMT+0700 (Western Indonesia Time)',
+    description:
+      'Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed tristique posuere.',
     sold: false,
   },
   {
@@ -37,6 +39,8 @@ const vehicleSeed = [
     taxDate: 'Sat Jan 25 2025 02:11:13 GMT+0700 (Western Indonesia Time)',
     price: 178000000,
     dateAdded: 'Sat Mar 16 2024 07:00:00 GMT+0700 (Western Indonesia Time)',
+    description:
+      'Vestibulum eget ex nunc. Etiam quis efficitur mauris, venenatis dapibus purus. Orci varius natoque penatibus et magnis dis parturient montes.',
     sold: false,
   },
   {
@@ -57,6 +61,7 @@ const vehicleSeed = [
     taxDate: 'Mon May 05 2025 02:11:13 GMT+0700 (Western Indonesia Time)',
     price: 950000000,
     dateAdded: 'Mon Jul 17 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
+    description: 'Praesent et condimentum mi. Ut elementum mi non.',
     sold: false,
   },
   {
@@ -77,6 +82,8 @@ const vehicleSeed = [
     taxDate: 'Thu Apr 24 2025 02:11:13 GMT+0700 (Western Indonesia Time)',
     price: 2050000000,
     dateAdded: 'Fri Aug 11 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
+    description:
+      'Sed sagittis bibendum hendrerit. Nulla a consectetur metus. Sed leo.',
     sold: false,
   },
 ];
