@@ -17,7 +17,7 @@ export const vehicleSchema = new Schema({
   fuelType: { type: String, required: true },
   specification: [String],
   description: String,
-  taxDate: { type: Date, required: true },
+  taxDate: Date,
   price: { type: Number, required: true },
   creditPrice: Number,
   marketPrice: Number,
