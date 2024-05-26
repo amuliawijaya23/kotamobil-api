@@ -99,7 +99,7 @@ export const addVehicle = async (request: Request, response: Response) => {
         const imageName = randomChar(16);
 
         const buffer = await sharp(image.buffer)
-          .resize({ height: 1920, width: 1080, fit: 'contain' })
+          .resize({ height: 1080, width: 1080, fit: 'contain' })
           .toBuffer();
         const params = {
           Bucket: bucketName,
@@ -193,7 +193,7 @@ export const updateVehicle = async (request: Request, response: Response) => {
       for (const image of images) {
         const imageName = randomChar(16);
         const buffer = await sharp(image.buffer)
-          .resize({ height: 1920, width: 1080, fit: 'contain' })
+          .resize({ height: 1080, width: 1080, fit: 'contain' })
           .toBuffer();
         const params = {
           Bucket: bucketName,
