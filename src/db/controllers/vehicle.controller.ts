@@ -66,7 +66,13 @@ export const getMyVehicles = async (request: Request, response: Response) => {
 
 export const addVehicle = async (request: Request, response: Response) => {
   try {
-    const formData = request.body;
+    const user = request.user;
+
+    if (!user) {
+      return response.status(401).json({ message: 'Not Authorized' }).end();
+    }
+
+    const formData = { ...JSON.parse(request.body.data), ownerId: user._id };
 
     if (
       !formData.name ||
@@ -87,11 +93,6 @@ export const addVehicle = async (request: Request, response: Response) => {
       return response.status(400).json({ message: 'Missing parameter' }).end();
     }
 
-    const data = {
-      ...formData,
-      ownerId: request.user?._id,
-    };
-
     if (request.files) {
       const vehicleImages = [];
       const images = request.files as Express.Multer.File[];
@@ -99,7 +100,7 @@ export const addVehicle = async (request: Request, response: Response) => {
         const imageName = randomChar(16);
 
         const buffer = await sharp(image.buffer)
-          .resize({ height: 1080, width: 1080, fit: 'contain' })
+          .resize({ height: 1080, width: 1350, fit: 'contain' })
           .toBuffer();
         const params = {
           Bucket: bucketName,
@@ -110,12 +111,12 @@ export const addVehicle = async (request: Request, response: Response) => {
 
         const command = new PutObjectCommand(params);
         await S3.send(command);
-        vehicleImages.push(`${request.user?._id}/images/vehicles/${imageName}`);
+        vehicleImages.push(`${user._id}/images/vehicles/${imageName}`);
       }
-      data.images = vehicleImages;
+      formData.images = vehicleImages;
     }
 
-    const vehicle = await createVehicle(data);
+    const vehicle = await createVehicle(formData);
     const vehicleData = { ...vehicle };
 
     if (vehicle.images?.length > 0) {
@@ -166,7 +167,7 @@ export const updateVehicle = async (request: Request, response: Response) => {
   try {
     const { id } = request.params;
 
-    const formData = { ...request.body };
+    const formData = { ...JSON.parse(request.body.data) };
 
     if (
       ('name' in formData && !formData.name) ||
@@ -193,7 +194,7 @@ export const updateVehicle = async (request: Request, response: Response) => {
       for (const image of images) {
         const imageName = randomChar(16);
         const buffer = await sharp(image.buffer)
-          .resize({ height: 1080, width: 1080, fit: 'contain' })
+          .resize({ height: 1080, width: 1350, fit: 'contain' })
           .toBuffer();
         const params = {
           Bucket: bucketName,
