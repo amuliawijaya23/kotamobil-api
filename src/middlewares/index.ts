@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import multer from 'multer';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -51,3 +52,7 @@ export const isOwner = async (
     return response.sendStatus(500);
   }
 };
+
+const storage = multer.memoryStorage();
+
+export const multerUpload = multer({ storage: storage });

@@ -1,7 +1,14 @@
 const vehicleSeed = [
   {
     name: '2018 Honda HR-V',
-    images: ['https://i.imgur.com/7lLUxJO.jpg'],
+    images: [
+      '664e2a93b5eeebf38e2b8439/images/vehicles/hr-v.jpeg',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/hr-v2.JPG',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/hr-v3.JPG',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/hr-v4.JPG',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/hr-v5.JPG',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/hr-v6.JPG',
+    ],
     ownerId: '664e2a93b5eeebf38e2b8439',
     vin: '1HGBH41JXMN109186',
     make: 'Honda',
@@ -23,7 +30,12 @@ const vehicleSeed = [
   },
   {
     name: '2020 Toyota Agya',
-    images: ['https://i.imgur.com/CxD9KmS.jpg'],
+    images: [
+      '664e2a93b5eeebf38e2b8439/images/vehicles/agya.jpeg',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/agya2.JPG',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/agya3.JPG',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/agya4.JPG',
+    ],
     ownerId: '664e2a93b5eeebf38e2b8439',
     vin: '1J4GW48S62C134257',
     make: 'Toyota',
@@ -45,7 +57,12 @@ const vehicleSeed = [
   },
   {
     name: '2023 Toyota Alphard',
-    images: ['https://i.imgur.com/wifA4jf.jpg'],
+    images: [
+      '664e2a93b5eeebf38e2b8439/images/vehicles/alphard.jpeg',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/alphard2.jpg',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/alphard3.jpg',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/alphard4.jpg',
+    ],
     ownerId: '664e2a93b5eeebf38e2b8439',
     vin: '3FAHP0GA9CR273266',
     make: 'Toyota',
@@ -66,7 +83,13 @@ const vehicleSeed = [
   },
   {
     name: '2023 Toyota FJ Cruiser',
-    images: ['https://i.imgur.com/a3IOqzk.jpg'],
+    images: [
+      '664e2a93b5eeebf38e2b8439/images/vehicles/fjcruiser.jpeg',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/fjcruiser2.JPG',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/fjcruiser3.JPG',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/fjcruiser4.JPG',
+      '664e2a93b5eeebf38e2b8439/images/vehicles/fjcruiser5.JPG',
+    ],
     ownerId: '664e2a93b5eeebf38e2b8439',
     vin: '1N6BD06T55C486886',
     make: 'Toyota',
