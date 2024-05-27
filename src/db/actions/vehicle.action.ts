@@ -15,9 +15,10 @@ const deleteVehicleById = (id: string) =>
       vehicle ? vehicle.toObject() : Vehicle,
   );
 const updateVehicleById = (id: string, values: Record<string | number, any>) =>
-  Vehicle.findByIdAndUpdate({ _id: id }, values).then(
-    (vehicle: Record<string | number, any>) => vehicle.toObject(),
-  );
+  Vehicle.findByIdAndUpdate({ _id: id }, values, {
+    returnOriginal: false,
+    returnDocument: 'after',
+  }).then((vehicle: Record<string | number, any>) => vehicle.toObject());
 
 export {
   getVehicles,

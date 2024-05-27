@@ -186,9 +186,9 @@ export const updateVehicle = async (request: Request, response: Response) => {
     ) {
       return response.status(400).json({ message: 'Missing parameter' }).end();
     }
+    const vehicleImages = [];
 
     if (request.files) {
-      const vehicleImages = [];
       const images = request.files as Express.Multer.File[];
 
       for (const image of images) {
@@ -207,10 +207,17 @@ export const updateVehicle = async (request: Request, response: Response) => {
         await S3.send(command);
         vehicleImages.push(`${request.user?._id}/images/vehicles/${imageName}`);
       }
-      formData.images = vehicleImages;
     }
 
-    const updatedVehicle = await updateVehicleById(id, formData);
+    const updateParams: Record<string, any> = {
+      $set: formData,
+    };
+
+    if (vehicleImages.length > 0) {
+      updateParams['$push'] = { images: vehicleImages };
+    }
+
+    const updatedVehicle = await updateVehicleById(id, updateParams);
 
     if (!updatedVehicle) {
       return response
