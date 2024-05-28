@@ -149,13 +149,6 @@ export const deleteVehicle = async (request: Request, response: Response) => {
 
     const deletedVehicle = await deleteVehicleById(id);
 
-    if (!deletedVehicle) {
-      return response
-        .status(400)
-        .json({ message: 'No listing with that id' })
-        .end();
-    }
-
     return response.status(200).json(deletedVehicle).end();
   } catch (error) {
     console.log(error);
@@ -218,13 +211,6 @@ export const updateVehicle = async (request: Request, response: Response) => {
     }
 
     const updatedVehicle = await updateVehicleById(id, updateParams);
-
-    if (!updatedVehicle) {
-      return response
-        .status(400)
-        .json({ message: 'No listing with that id' })
-        .end();
-    }
 
     const vehicleData = { ...updatedVehicle };
 
