@@ -1,8 +1,10 @@
 import mongoose, { connect } from 'mongoose';
-import Vehicle, { vehicleSchema } from '../models/vehicle.model';
+import Vehicle from '../models/vehicle.model';
+import Contact from '../models/contact.model';
 import dotenv from 'dotenv';
 
 import vehicleSeed from './vehicleSeed';
+import contactSeed from './contactSeed';
 
 dotenv.config();
 
@@ -22,9 +24,12 @@ mongoose.connection.on('error', (error) => {
 mongoose.connection.once('connected', async () => {
   console.log('Connected to MongoDB');
   await mongoose.connection.db.collection('vehicles').drop();
+  await mongoose.connection.db.collection('contacts').drop();
   console.log('Collection dropped');
 
-  await Vehicle.insertMany(vehicleSeed).then((vehicles) => {
+  await Vehicle.insertMany(vehicleSeed);
+
+  await Contact.insertMany(contactSeed).then(() => {
     console.log('Database Seeded');
     mongoose.disconnect();
   });

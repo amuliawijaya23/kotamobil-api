@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const contactSchema = new Schema({
+export const contactSchema = new Schema({
   ownerId: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: String,
