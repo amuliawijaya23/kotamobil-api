@@ -4,7 +4,7 @@ export const contactSchema = new Schema({
   ownerId: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: String,
-  email: { type: String, unique: true },
+  email: String,
   mobile: { type: String, unique: true, required: true },
   address: String,
   facebook: String,

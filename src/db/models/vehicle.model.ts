@@ -23,7 +23,8 @@ export const vehicleSchema = new Schema({
   marketPrice: Number,
   purchasePrice: Number,
   soldPrice: Number,
-  ownerId: { type: String, ref: 'User' },
+  ownerId: { type: String, ref: 'users' },
+  buyerId: { type: String, ref: 'contacts' },
   dateAdded: { type: Date, default: Date.now(), required: true },
   dateSold: Date,
 });
