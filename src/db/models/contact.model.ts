@@ -10,6 +10,7 @@ export const contactSchema = new Schema({
   facebook: String,
   instagram: String,
   tiktok: String,
+  twitter: String,
 });
 
 const Contact =
