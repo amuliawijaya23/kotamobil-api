@@ -41,7 +41,7 @@ export const addContact = async (request: Request, response: Response) => {
         .end();
     }
 
-    const contact = await createContact(data);
+    const contact = await createContact({ ...data, ownerId: user._id });
 
     return response.status(200).json(contact).end();
   } catch (error) {
