@@ -54,7 +54,7 @@ const initializePassport = () => {
   });
 
   passport.deserializeUser(async (id: string, done: Function) => {
-    return done(null, (await getUserById(id)).toObject());
+    return done(null, await getUserById(id));
   });
 };
 export default initializePassport;

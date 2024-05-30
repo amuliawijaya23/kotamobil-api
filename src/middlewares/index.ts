@@ -67,7 +67,7 @@ export const isVehicleOwner = async (
         .end();
     }
 
-    if (vehicle.ownerId !== user?._id) {
+    if (vehicle.ownerId !== user?._id.toString()) {
       return response.status(401).json({ message: 'Not Authorized' }).end();
     }
 
@@ -103,7 +103,7 @@ export const isContactOwner = async (
         .end();
     }
 
-    if (contact.ownerId !== user?._id) {
+    if (contact.ownerId !== user?._id.toString()) {
       return response.status(401).json({ message: 'Not Authorized' }).end();
     }
 
