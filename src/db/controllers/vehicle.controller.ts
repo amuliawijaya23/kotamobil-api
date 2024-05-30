@@ -38,9 +38,12 @@ export const getMyVehicles = async (request: Request, response: Response) => {
 
     const vehicles = await getUserVehicles(user._id);
 
-    let inventory = [...vehicles];
+    const inventory = vehicles.map((vehicle) => ({
+      ...vehicle._doc,
+      images: [...vehicle.images],
+    }));
 
-    for (const [index, vehicle] of inventory.entries()) {
+    for (const [index, vehicle] of vehicles.entries()) {
       if (vehicle.images?.length > 0) {
         const images = await Promise.all(
           vehicle.images.map(async (image: string) => {
@@ -49,10 +52,9 @@ export const getMyVehicles = async (request: Request, response: Response) => {
             const imageUrl = await getSignedUrl(S3, command, {
               expiresIn: 24 * 60 * 60,
             });
-            return imageUrl;
+            return { key: image, url: imageUrl };
           }),
         );
-
         inventory[index].images = images;
       }
     }
@@ -130,7 +132,7 @@ export const addVehicle = async (request: Request, response: Response) => {
           const imageUrl = await getSignedUrl(S3, command, {
             expiresIn: 24 * 60 * 60,
           });
-          return imageUrl;
+          return { key: image, url: imageUrl };
         }),
       );
       vehicleData.images = images;
@@ -225,12 +227,11 @@ export const updateVehicle = async (request: Request, response: Response) => {
           const imageUrl = await getSignedUrl(S3, command, {
             expiresIn: 24 * 60 * 60,
           });
-          return imageUrl;
+          return { key: image, url: imageUrl };
         }),
       );
       vehicleData.images = images;
     }
-
     return response.status(200).json(vehicleData).end();
   } catch (error) {
     console.log(error);
