@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 
-import { PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import {
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { bucketName } from '~/lib/S3';
 import S3 from '~/lib/S3';
@@ -38,10 +42,7 @@ export const getMyVehicles = async (request: Request, response: Response) => {
 
     const vehicles = await getUserVehicles(user._id);
 
-    const inventory = vehicles.map((vehicle) => ({
-      ...vehicle._doc,
-      images: [...vehicle.images],
-    }));
+    const inventory = JSON.parse(JSON.stringify(vehicles));
 
     for (const [index, vehicle] of vehicles.entries()) {
       if (vehicle.images?.length > 0) {
@@ -181,6 +182,29 @@ export const updateVehicle = async (request: Request, response: Response) => {
     ) {
       return response.status(400).json({ message: 'Missing parameter' }).end();
     }
+    const { images, ...data } = formData;
+
+    const updateParams: Record<string, any> = {
+      $set: data,
+    };
+
+    if (formData.images) {
+      const keys = formData.images.map(
+        (img: { key: string; url: string }) => img.key,
+      );
+      updateParams['$pullAll'] = {
+        images: keys,
+      };
+      for (const image of formData.images) {
+        const params = {
+          Bucket: bucketName,
+          Key: image.key,
+        };
+        const command = new DeleteObjectCommand(params);
+        await S3.send(command);
+      }
+    }
+
     const vehicleImages = [];
 
     if (request.files) {
@@ -203,10 +227,6 @@ export const updateVehicle = async (request: Request, response: Response) => {
         vehicleImages.push(`${request.user?._id}/images/vehicles/${imageName}`);
       }
     }
-
-    const updateParams: Record<string, any> = {
-      $set: formData,
-    };
 
     if (vehicleImages.length > 0) {
       updateParams['$push'] = { images: vehicleImages };
