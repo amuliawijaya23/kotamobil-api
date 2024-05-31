@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   addVehicle,
   getMyVehicles,
+  getVehicleImages,
   updateVehicle,
   deleteVehicle,
 } from '~/db/controllers/vehicle.controller';
@@ -15,6 +16,12 @@ export default (router: Router) => {
     addVehicle,
   );
   router.get('/api/vehicle', isAuthenticated, getMyVehicles);
+  router.get(
+    '/api/vehicle/images/:id',
+    isAuthenticated,
+    isVehicleOwner,
+    getVehicleImages,
+  );
   router.post(
     '/api/vehicle/update/:id',
     multerUpload.array('images', 10),
