@@ -66,7 +66,7 @@ export const getMyVehicles = async (request: Request, response: Response) => {
 
     return response.status(200).json(inventoryWithCoverImages).end();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof Error) {
       return response
         .status(500)
@@ -103,7 +103,7 @@ export const getVehicleImages = async (
 
     return response.status(200).json(images).end();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof Error) {
       return response
         .status(500)
@@ -156,7 +156,7 @@ export const addVehicle = async (request: Request, response: Response) => {
 
     return response.status(200).json(vehicleData).end();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof Error) {
       return response
         .status(500)
@@ -225,7 +225,7 @@ export const updateVehicle = async (request: Request, response: Response) => {
 
     return response.status(200).json(vehicleData).end();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof Error) {
       return response
         .status(500)
@@ -244,14 +244,22 @@ export const deleteVehicle = async (request: Request, response: Response) => {
 
     const deletedVehicle = await deleteVehicleById(id);
 
-    if (deletedVehicle.images) {
+    if (deletedVehicle.images && deletedVehicle.images.length > 0) {
       await removeImages(deletedVehicle.images);
     }
 
     return response.status(200).json(deletedVehicle).end();
   } catch (error) {
-    console.log(error);
-    return response.sendStatus(500);
+    console.error(error);
+    if (error instanceof Error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+    return response.status(500).json({
+      message: 'Internal Server Error',
+      error: 'An unknown error occurred',
+    });
   }
 };
 
