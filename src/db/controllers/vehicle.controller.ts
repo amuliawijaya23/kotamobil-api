@@ -19,6 +19,7 @@ import {
 const requiredFields = [
   'name',
   'vin',
+  'bodyType',
   'make',
   'model',
   'year',

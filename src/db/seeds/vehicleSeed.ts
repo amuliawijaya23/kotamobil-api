@@ -24,6 +24,7 @@ const vehicleSeed = [
     dateAdded: 'Mon Jul 17 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     description: 'Praesent et condimentum mi. Ut elementum mi non.',
     sold: false,
+    bodyType: 'MPV',
   },
   {
     name: '2023 Toyota FJ Cruiser',
@@ -52,6 +53,7 @@ const vehicleSeed = [
     description:
       'Sed sagittis bibendum hendrerit. Nulla a consectetur metus. Sed leo.',
     sold: false,
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -61,7 +63,7 @@ const vehicleSeed = [
     model: 'Corolla',
     year: 2022,
     odometer: 5000,
-    price: 500000000, // 500 million IDR
+    price: 500000000,
     color: 'White',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -73,6 +75,7 @@ const vehicleSeed = [
     marketPrice: 510000000,
     purchasePrice: 490000000,
     specification: ['Air Conditioning', 'Bluetooth', 'Backup Camera'],
+    bodyType: 'Sedan',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -82,7 +85,7 @@ const vehicleSeed = [
     model: 'Accord',
     year: 2019,
     odometer: 25000,
-    price: 350000000, // 350 million IDR
+    price: 350000000,
     color: 'Black',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -96,6 +99,7 @@ const vehicleSeed = [
     marketPrice: 355000000,
     purchasePrice: 345000000,
     specification: ['Leather Seats', 'Sunroof', 'Navigation System'],
+    bodyType: 'Sedan',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -105,7 +109,7 @@ const vehicleSeed = [
     model: 'Mustang',
     year: 2020,
     odometer: 15000,
-    price: 800000000, // 800 million IDR
+    price: 800000000,
     color: 'Red',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -117,6 +121,7 @@ const vehicleSeed = [
     marketPrice: 810000000,
     purchasePrice: 790000000,
     specification: ['Heated Seats', 'Premium Audio', 'Backup Camera'],
+    bodyType: 'Sport',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -126,7 +131,7 @@ const vehicleSeed = [
     model: 'X5',
     year: 2018,
     odometer: 40000,
-    price: 900000000, // 900 million IDR
+    price: 900000000,
     color: 'Blue',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -140,6 +145,7 @@ const vehicleSeed = [
     marketPrice: 910000000,
     purchasePrice: 890000000,
     specification: ['All-Wheel Drive', 'Panoramic Sunroof', 'Parking Sensors'],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -149,7 +155,7 @@ const vehicleSeed = [
     model: 'Model 3',
     year: 2021,
     odometer: 10000,
-    price: 1200000000, // 1.2 billion IDR
+    price: 1200000000,
     color: 'Silver',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -161,6 +167,7 @@ const vehicleSeed = [
     marketPrice: 1220000000,
     purchasePrice: 1180000000,
     specification: ['Autopilot', 'Glass Roof', 'Wireless Charging'],
+    bodyType: 'Sedan',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -170,7 +177,7 @@ const vehicleSeed = [
     model: 'A4',
     year: 2017,
     odometer: 35000,
-    price: 400000000, // 400 million IDR
+    price: 400000000,
     color: 'Gray',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -184,6 +191,7 @@ const vehicleSeed = [
     marketPrice: 410000000,
     purchasePrice: 395000000,
     specification: ['LED Headlights', 'Blind Spot Monitor', 'Apple CarPlay'],
+    bodyType: 'Sedan',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -193,7 +201,7 @@ const vehicleSeed = [
     model: 'Silverado',
     year: 2016,
     odometer: 60000,
-    price: 600000000, // 600 million IDR
+    price: 600000000,
     color: 'Black',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -207,6 +215,7 @@ const vehicleSeed = [
     marketPrice: 610000000,
     purchasePrice: 590000000,
     specification: ['Tow Package', 'Running Boards', '4WD'],
+    bodyType: 'Pickup',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -216,7 +225,7 @@ const vehicleSeed = [
     model: 'Tucson',
     year: 2022,
     odometer: 8000,
-    price: 550000000, // 550 million IDR
+    price: 550000000,
     color: 'Green',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -232,6 +241,7 @@ const vehicleSeed = [
       'Wireless Charging',
       'Heated Seats',
     ],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -241,7 +251,7 @@ const vehicleSeed = [
     model: 'GLC',
     year: 2020,
     odometer: 20000,
-    price: 950000000, // 950 million IDR
+    price: 950000000,
     color: 'White',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -254,6 +264,7 @@ const vehicleSeed = [
     marketPrice: 960000000,
     purchasePrice: 940000000,
     specification: ['Panoramic Sunroof', 'All-Wheel Drive', 'Bluetooth'],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -263,7 +274,7 @@ const vehicleSeed = [
     model: 'Outback',
     year: 2019,
     odometer: 30000,
-    price: 550000000, // 550 million IDR
+    price: 550000000,
     color: 'Silver',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -277,6 +288,7 @@ const vehicleSeed = [
     marketPrice: 560000000,
     purchasePrice: 540000000,
     specification: ['All-Wheel Drive', 'Heated Seats', 'Rearview Camera'],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -286,7 +298,7 @@ const vehicleSeed = [
     model: 'Leaf',
     year: 2021,
     odometer: 12000,
-    price: 700000000, // 700 million IDR
+    price: 700000000,
     color: 'Blue',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -302,6 +314,7 @@ const vehicleSeed = [
       'Navigation System',
       'Bluetooth Connectivity',
     ],
+    bodyType: 'Hatchback',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -311,7 +324,7 @@ const vehicleSeed = [
     model: 'Hilux',
     year: 2019,
     odometer: 40000,
-    price: 450000000, // 450 million IDR
+    price: 450000000,
     color: 'Black',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -325,6 +338,7 @@ const vehicleSeed = [
     marketPrice: 460000000,
     purchasePrice: 440000000,
     specification: ['4WD', 'Tow Package', 'Bed Liner'],
+    bodyType: 'Pickup',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -334,7 +348,7 @@ const vehicleSeed = [
     model: 'Golf',
     year: 2018,
     odometer: 30000,
-    price: 300000000, // 300 million IDR
+    price: 300000000,
     color: 'White',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -352,6 +366,7 @@ const vehicleSeed = [
       'Infotainment System',
       'Rearview Camera',
     ],
+    bodyType: 'Hatchback',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -361,7 +376,7 @@ const vehicleSeed = [
     model: 'Seltos',
     year: 2022,
     odometer: 5000,
-    price: 400000000, // 400 million IDR
+    price: 400000000,
     color: 'Yellow',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -377,6 +392,7 @@ const vehicleSeed = [
       'Touchscreen Display',
       'Lane Keeping Assist',
     ],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -386,7 +402,7 @@ const vehicleSeed = [
     model: 'CX-5',
     year: 2020,
     odometer: 20000,
-    price: 600000000, // 600 million IDR
+    price: 600000000,
     color: 'Red',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -402,6 +418,7 @@ const vehicleSeed = [
       'Premium Sound System',
       'Adaptive Cruise Control',
     ],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -411,7 +428,7 @@ const vehicleSeed = [
     model: 'Pajero Sport',
     year: 2019,
     odometer: 45000,
-    price: 550000000, // 550 million IDR
+    price: 550000000,
     color: 'Silver',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -425,6 +442,7 @@ const vehicleSeed = [
     marketPrice: 560000000,
     purchasePrice: 540000000,
     specification: ['4WD', 'Sunroof', 'Leather Seats'],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -434,7 +452,7 @@ const vehicleSeed = [
     model: 'Swift',
     year: 2021,
     odometer: 8000,
-    price: 250000000, // 250 million IDR
+    price: 250000000,
     color: 'Blue',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -450,6 +468,7 @@ const vehicleSeed = [
       'Rearview Camera',
       'Bluetooth Connectivity',
     ],
+    bodyType: 'Hatchback',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -459,7 +478,7 @@ const vehicleSeed = [
     model: 'RX',
     year: 2018,
     odometer: 35000,
-    price: 850000000, // 850 million IDR
+    price: 850000000,
     color: 'White',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -477,6 +496,7 @@ const vehicleSeed = [
       'Sunroof',
       'Heated and Ventilated Seats',
     ],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -486,7 +506,7 @@ const vehicleSeed = [
     model: 'CR-V',
     year: 2020,
     odometer: 15000,
-    price: 600000000, // 600 million IDR
+    price: 600000000,
     color: 'Black',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -502,6 +522,7 @@ const vehicleSeed = [
       'Blind Spot Monitoring',
       'Adaptive Cruise Control',
     ],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -511,7 +532,7 @@ const vehicleSeed = [
     model: '3 Series',
     year: 2022,
     odometer: 5000,
-    price: 900000000, // 900 million IDR
+    price: 900000000,
     color: 'Gray',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -523,6 +544,7 @@ const vehicleSeed = [
     marketPrice: 910000000,
     purchasePrice: 890000000,
     specification: ['Hybrid Engine', 'Navigation System', 'Leather Seats'],
+    bodyType: 'Sedan',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -532,7 +554,7 @@ const vehicleSeed = [
     model: 'Wrangler',
     year: 2021,
     odometer: 10000,
-    price: 950000000, // 950 million IDR
+    price: 950000000,
     color: 'Green',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -544,6 +566,7 @@ const vehicleSeed = [
     marketPrice: 960000000,
     purchasePrice: 940000000,
     specification: ['4WD', 'Removable Roof', 'Navigation System'],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -553,7 +576,7 @@ const vehicleSeed = [
     model: 'Fortuner',
     year: 2018,
     odometer: 40000,
-    price: 500000000, // 500 million IDR
+    price: 500000000,
     color: 'White',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -567,6 +590,7 @@ const vehicleSeed = [
     marketPrice: 510000000,
     purchasePrice: 490000000,
     specification: ['All-Wheel Drive', 'Sunroof', 'Leather Seats'],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -576,7 +600,7 @@ const vehicleSeed = [
     model: 'Kona',
     year: 2022,
     odometer: 5000,
-    price: 450000000, // 450 million IDR
+    price: 450000000,
     color: 'Blue',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -588,6 +612,7 @@ const vehicleSeed = [
     marketPrice: 460000000,
     purchasePrice: 440000000,
     specification: ['Electric Drive', 'Touchscreen Display', 'Heated Seats'],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -597,7 +622,7 @@ const vehicleSeed = [
     model: 'Sportage',
     year: 2019,
     odometer: 30000,
-    price: 350000000, // 350 million IDR
+    price: 350000000,
     color: 'Red',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -611,6 +636,7 @@ const vehicleSeed = [
     marketPrice: 360000000,
     purchasePrice: 340000000,
     specification: ['All-Wheel Drive', 'Sunroof', 'Rearview Camera'],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -620,7 +646,7 @@ const vehicleSeed = [
     model: 'Alphard',
     year: 2020,
     odometer: 12000,
-    price: 1200000000, // 1.2 billion IDR
+    price: 1200000000,
     color: 'Black',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -632,6 +658,7 @@ const vehicleSeed = [
     marketPrice: 1220000000,
     purchasePrice: 1180000000,
     specification: ['Premium Audio', 'Rearview Camera', 'Leather Seats'],
+    bodyType: 'MPV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -641,7 +668,7 @@ const vehicleSeed = [
     model: 'Terra',
     year: 2021,
     odometer: 15000,
-    price: 800000000, // 800 million IDR
+    price: 800000000,
     color: 'Silver',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -657,6 +684,7 @@ const vehicleSeed = [
       'Touchscreen Display',
       'Rearview Camera',
     ],
+    bodyType: 'SUV',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -666,7 +694,7 @@ const vehicleSeed = [
     model: 'Ranger',
     year: 2018,
     odometer: 50000,
-    price: 450000000, // 450 million IDR
+    price: 450000000,
     color: 'White',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -680,6 +708,7 @@ const vehicleSeed = [
     marketPrice: 460000000,
     purchasePrice: 440000000,
     specification: ['4WD', 'Tow Package', 'Bluetooth Connectivity'],
+    bodyType: 'Pickup',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -689,7 +718,7 @@ const vehicleSeed = [
     model: 'Civic',
     year: 2019,
     odometer: 30000,
-    price: 400000000, // 400 million IDR
+    price: 400000000,
     color: 'Blue',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -703,6 +732,7 @@ const vehicleSeed = [
     marketPrice: 410000000,
     purchasePrice: 390000000,
     specification: ['Turbocharged Engine', 'Sunroof', 'Rearview Camera'],
+    bodyType: 'Sedan',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -712,7 +742,7 @@ const vehicleSeed = [
     model: 'Model S',
     year: 2022,
     odometer: 5000,
-    price: 1500000000, // 1.5 billion IDR
+    price: 1500000000,
     color: 'Red',
     condition: 'New',
     assembly: 'Complete-Built-Up',
@@ -724,6 +754,7 @@ const vehicleSeed = [
     marketPrice: 1520000000,
     purchasePrice: 1480000000,
     specification: ['Autopilot', 'Glass Roof', 'Premium Sound System'],
+    bodyType: 'Sedan',
   },
   {
     ownerId: '664e2a93b5eeebf38e2b8439',
@@ -733,7 +764,7 @@ const vehicleSeed = [
     model: 'C-Class',
     year: 2019,
     odometer: 20000,
-    price: 900000000, // 900 million IDR
+    price: 900000000,
     color: 'Gray',
     condition: 'Used',
     assembly: 'Complete-Knock-Down',
@@ -747,6 +778,7 @@ const vehicleSeed = [
     marketPrice: 910000000,
     purchasePrice: 890000000,
     specification: ['All-Wheel Drive', 'Sunroof', 'Leather Seats'],
+    bodyType: 'Sedan',
   },
 ];
 
