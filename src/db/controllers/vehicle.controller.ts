@@ -263,10 +263,56 @@ export const deleteVehicle = async (request: Request, response: Response) => {
   }
 };
 
-export const searchListings = async (request: Request, response: Response) => {
-  const data = request.body;
+export const searchVehicles = async (request: Request, response: Response) => {
+  try {
+    const user = request.user;
+    const { makes, models } = request.body;
 
-  const params = {
-    $and: [],
-  };
+    const query: any = {};
+
+    if (!user) {
+      response.status(401).json({ message: 'Not Authorized' }).end();
+      return;
+    }
+
+    query.ownerId = user._id.toString();
+
+    if (makes) {
+      query.make = { $in: makes };
+    }
+
+    if (models) {
+      query.model = { $in: models };
+    }
+
+    const vehicles = await queryVehicles(query);
+
+    const inventory = vehicles.map(async (vehicle) => {
+      // deep copy the vehicle object
+      const clonedVehicle = JSON.parse(JSON.stringify(vehicle));
+
+      if (clonedVehicle.images && clonedVehicle.images.length > 0) {
+        const coverImage = await getCoverImagePresignedUrls(
+          clonedVehicle.images[0],
+        );
+        clonedVehicle.images = [coverImage];
+      }
+      return clonedVehicle;
+    });
+
+    const inventoryWithCoverImages = await Promise.all(inventory);
+
+    return response.status(200).json(inventoryWithCoverImages).end();
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+    return response.status(500).json({
+      message: 'Internal Server Error',
+      error: 'An unknown error occurred',
+    });
+  }
 };

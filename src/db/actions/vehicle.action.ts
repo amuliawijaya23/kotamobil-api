@@ -4,8 +4,8 @@ const getVehicles = () => Vehicle.find();
 const getUserVehicles = (id: string) =>
   Vehicle.find({ ownerId: id }).sort({ dateAdded: -1 });
 const getVehicleById = (id: string) => Vehicle.findOne({ _id: id });
-const queryVehicles = (param: { $and: [Object[]] }) =>
-  Vehicle.find({ ...param });
+const queryVehicles = (params: Record<string, any>) =>
+  Vehicle.find(params).sort({ dateAdded: -1 });
 const createVehicle = (values: Record<string | number, any>) =>
   new Vehicle(values)
     .save()

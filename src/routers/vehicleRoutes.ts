@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   addVehicle,
   getMyVehicles,
+  searchVehicles,
   getVehicleImages,
   updateVehicle,
   deleteVehicle,
@@ -29,6 +30,7 @@ export default (router: Router) => {
     isVehicleOwner,
     updateVehicle,
   );
+  router.post('/api/vehicle/search', isAuthenticated, searchVehicles);
   router.delete(
     '/api/vehicle/delete/:id',
     isAuthenticated,
