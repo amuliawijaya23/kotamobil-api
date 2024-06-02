@@ -267,16 +267,25 @@ export const deleteVehicle = async (request: Request, response: Response) => {
 export const searchVehicles = async (request: Request, response: Response) => {
   try {
     const user = request.user;
-    const { makes, models } = request.body;
-
-    const query: any = {};
+    const {
+      makes,
+      models,
+      priceRange,
+      yearRange,
+      odometerRange,
+      condition,
+      assembly,
+      bodyType,
+      fuelType,
+      transmission,
+    } = request.body;
 
     if (!user) {
       response.status(401).json({ message: 'Not Authorized' }).end();
       return;
     }
 
-    query.ownerId = user._id.toString();
+    const query: { [key: string]: any } = { ownerId: user._id.toString() };
 
     if (makes) {
       query.make = { $in: makes };
@@ -286,24 +295,53 @@ export const searchVehicles = async (request: Request, response: Response) => {
       query.model = { $in: models };
     }
 
+    if (priceRange.length == 2) {
+      query.price = { $gte: priceRange[0], $lte: priceRange[1] };
+    }
+
+    if (yearRange.length == 2) {
+      query.year = { $gte: yearRange[0], $lte: yearRange[1] };
+    }
+
+    if (odometerRange.length == 2) {
+      query.odometer = { $gte: odometerRange[0], $lte: odometerRange[1] };
+    }
+
+    if (condition) {
+      query.condition = { $in: condition };
+    }
+
+    if (assembly) {
+      query.assembly = { $in: assembly };
+    }
+
+    if (bodyType) {
+      query.bodyType = { $in: bodyType };
+    }
+
+    if (fuelType) {
+      query.fuelType = { $in: fuelType };
+    }
+
+    if (transmission) {
+      query.transmission = { $in: transmission };
+    }
+
     const vehicles = await queryVehicles(query);
 
-    const inventory = vehicles.map(async (vehicle) => {
-      // deep copy the vehicle object
-      const clonedVehicle = JSON.parse(JSON.stringify(vehicle));
+    const inventory = await Promise.all(
+      vehicles.map(async (vehicle) => {
+        if (vehicle.images && vehicle.images.length > 0) {
+          const coverImage = await getCoverImagePresignedUrls(
+            vehicle.images[0],
+          );
+          return { ...vehicle.toObject(), images: [coverImage] };
+        }
+        return vehicle.toObject();
+      }),
+    );
 
-      if (clonedVehicle.images && clonedVehicle.images.length > 0) {
-        const coverImage = await getCoverImagePresignedUrls(
-          clonedVehicle.images[0],
-        );
-        clonedVehicle.images = [coverImage];
-      }
-      return clonedVehicle;
-    });
-
-    const inventoryWithCoverImages = await Promise.all(inventory);
-
-    return response.status(200).json(inventoryWithCoverImages).end();
+    return response.status(200).json(inventory).end();
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
