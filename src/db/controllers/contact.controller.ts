@@ -3,9 +3,10 @@ import { Request, Response } from 'express';
 import {
   getUserContacts,
   createContact,
-  deleteContactById,
+  deleteContacts,
   updateContactById,
 } from '../actions/contact.action';
+import { queryVehicles } from '../actions/vehicle.action';
 
 export const getMyContacts = async (request: Request, response: Response) => {
   try {
@@ -68,11 +69,40 @@ export const addContact = async (request: Request, response: Response) => {
 
 export const deleteContact = async (request: Request, response: Response) => {
   try {
-    const { id } = request.params;
+    const { contactIds } = request.body;
 
-    const deletedContact = await deleteContactById(id);
+    if (!Array.isArray(contactIds) || contactIds.length === 0) {
+      return response
+        .status(400)
+        .json({ message: 'Invalid contact Ids provided' })
+        .end();
+    }
 
-    return response.status(200).json(deletedContact).end();
+    const associatedVehicles = await queryVehicles({
+      buyerId: { $in: contactIds },
+    });
+
+    if (associatedVehicles.length > 0) {
+      const associatedBuyerIds = associatedVehicles.map(
+        (vehicle) => vehicle.buyerId,
+      );
+
+      const associatedVehicleIds = associatedVehicles.map((vehicle) =>
+        vehicle._id.toString(),
+      );
+
+      return response.status(400).json({
+        message:
+          'Cannot delete contacts. They are associated with vehicles in the inventory. Please update the vehicle buyer information before deleting',
+        associatedBuyerIds,
+        associatedVehicleIds,
+      });
+    }
+
+    await deleteContacts(contactIds);
+    return response
+      .status(200)
+      .json({ message: 'Contacts deleted successfully' });
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {

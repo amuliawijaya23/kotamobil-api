@@ -17,12 +17,15 @@ const updateContactById = (id: string, values: Record<string, any>) =>
     returnOriginal: false,
     returnDocument: 'after',
   }).then((contact: Record<string, any>) => contact && contact.toObject());
+const deleteContacts = (contactIds: string[]) =>
+  Contact.deleteMany({ _id: { $in: contactIds } });
 
 export {
   getContacts,
   getUserContacts,
   getContactById,
   createContact,
+  deleteContacts,
   deleteContactById,
   updateContactById,
 };
