@@ -19,8 +19,16 @@ export const getMyContacts = async (request: Request, response: Response) => {
 
     return response.status(200).json(contacts).end();
   } catch (error) {
-    console.log(error);
-    return response.sendStatus(500);
+    console.error(error);
+    if (error instanceof Error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+    return response.status(500).json({
+      message: 'Internal Server Error',
+      error: 'An unknown error occurred',
+    });
   }
 };
 
@@ -45,8 +53,16 @@ export const addContact = async (request: Request, response: Response) => {
 
     return response.status(200).json(contact).end();
   } catch (error) {
-    console.log(error);
-    return response.sendStatus(500);
+    console.error(error);
+    if (error instanceof Error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+    return response.status(500).json({
+      message: 'Internal Server Error',
+      error: 'An unknown error occurred',
+    });
   }
 };
 
@@ -58,8 +74,16 @@ export const deleteContact = async (request: Request, response: Response) => {
 
     return response.status(200).json(deletedContact).end();
   } catch (error) {
-    console.log(error);
-    return response.sendStatus(500);
+    console.error(error);
+    if (error instanceof Error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+    return response.status(500).json({
+      message: 'Internal Server Error',
+      error: 'An unknown error occurred',
+    });
   }
 };
 
@@ -68,21 +92,31 @@ export const updateContact = async (request: Request, response: Response) => {
     const { id } = request.params;
     const data = { ...request.body };
 
-    if (
-      !('firstName' in data && !data.firstName) ||
-      !('mobile' in data && !data.mobile)
-    ) {
-      return response
+    if (!id) {
+      response.status(400).json({ message: 'Missing required parameters' });
+      return;
+    }
+
+    if (!data.firstName || !data.mobile) {
+      response
         .status(400)
         .json({ message: 'Missing required parameters' })
         .end();
+      return;
     }
 
     const contact = await updateContactById(id, data);
-
     return response.status(200).json(contact).end();
   } catch (error) {
-    console.log(error);
-    return response.sendStatus(500);
+    console.error(error);
+    if (error instanceof Error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+    return response.status(500).json({
+      message: 'Internal Server Error',
+      error: 'An unknown error occurred',
+    });
   }
 };
