@@ -268,6 +268,7 @@ export const searchVehicles = async (request: Request, response: Response) => {
   try {
     const user = request.user;
     const {
+      search,
       makes,
       models,
       priceRange,
@@ -286,6 +287,10 @@ export const searchVehicles = async (request: Request, response: Response) => {
     }
 
     const query: { [key: string]: any } = { ownerId: user._id.toString() };
+
+    if (search && search.trim()) {
+      query.name = { $regex: search, $options: 'i' };
+    }
 
     if (makes) {
       query.make = { $in: makes };

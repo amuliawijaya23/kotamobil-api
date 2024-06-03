@@ -27,9 +27,9 @@ mongoose.connection.once('connected', async () => {
   await mongoose.connection.db.collection('contacts').drop();
   console.log('Collection dropped');
 
-  await Vehicle.insertMany(vehicleSeed);
+  await Contact.insertMany(contactSeed);
 
-  await Contact.insertMany(contactSeed).then(() => {
+  await Vehicle.insertMany(vehicleSeed).then(() => {
     console.log('Database Seeded');
     mongoose.disconnect();
   });
