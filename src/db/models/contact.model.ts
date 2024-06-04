@@ -11,6 +11,7 @@ export const contactSchema = new Schema({
   instagram: String,
   tiktok: String,
   twitter: String,
+  linkedIn: String,
 });
 
 const Contact =

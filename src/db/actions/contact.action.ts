@@ -19,6 +19,8 @@ const updateContactById = (id: string, values: Record<string, any>) =>
   }).then((contact: Record<string, any>) => contact && contact.toObject());
 const deleteContacts = (contactIds: string[]) =>
   Contact.deleteMany({ _id: { $in: contactIds } });
+const queryContacts = (params: Record<string, any>) =>
+  Contact.find(params).sort({ firstName: 1 });
 
 export {
   getContacts,
@@ -28,4 +30,5 @@ export {
   deleteContacts,
   deleteContactById,
   updateContactById,
+  queryContacts,
 };

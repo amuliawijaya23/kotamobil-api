@@ -5,6 +5,7 @@ import {
   createContact,
   deleteContacts,
   updateContactById,
+  queryContacts,
 } from '../actions/contact.action';
 import { queryVehicles } from '../actions/vehicle.action';
 
@@ -139,6 +140,45 @@ export const updateContact = async (request: Request, response: Response) => {
     return response.status(200).json(contact).end();
   } catch (error) {
     console.error(error);
+    if (error instanceof Error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+    return response.status(500).json({
+      message: 'Internal Server Error',
+      error: 'An unknown error occurred',
+    });
+  }
+};
+
+export const searchContacts = async (request: Request, response: Response) => {
+  try {
+    const user = request.user;
+    const { search } = request.body;
+
+    if (!user) {
+      response.status(401).json({ message: 'Not Authorized' }).end();
+      return;
+    }
+
+    const query: { [key: string]: any } = {
+      ownerId: user._id.toString(),
+    };
+
+    if (search) {
+      query.$or = [
+        { firstName: { $regex: search, $options: 'i' } },
+        { lastName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const contacts = await queryContacts(query);
+    const contactsData = contacts.map((c) => c.toObject());
+
+    return response.status(200).json(contactsData).end();
+  } catch (error) {
     if (error instanceof Error) {
       return response
         .status(500)
