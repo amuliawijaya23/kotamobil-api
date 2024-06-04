@@ -269,6 +269,7 @@ export const searchVehicles = async (request: Request, response: Response) => {
     const user = request.user;
     const {
       search,
+      status,
       makes,
       models,
       priceRange,
@@ -290,6 +291,11 @@ export const searchVehicles = async (request: Request, response: Response) => {
 
     if (search && search.trim()) {
       query.name = { $regex: search, $options: 'i' };
+    }
+
+    if (status) {
+      const sold = status.map((s: string) => (s === 'Sold' ? true : false));
+      query.sold = { $in: sold };
     }
 
     if (makes) {
