@@ -366,3 +366,43 @@ export const searchVehicles = async (request: Request, response: Response) => {
     });
   }
 };
+
+export const getVehicleSales = async (request: Request, response: Response) => {
+  try {
+    const user = request.user;
+
+    if (!user) {
+      response.status(401).json({ message: 'Not Authorized' }).end();
+      return;
+    }
+
+    const { startDate, endDate } = request.body;
+
+    if (!startDate || !endDate) {
+      response.status(400).json({ message: 'Missing parameter' }).end();
+      return;
+    }
+
+    const query: { [key: string]: any } = {
+      ownerId: user._id.toString(),
+      sold: true,
+      dateSold: { $gte: startDate, $lte: endDate },
+    };
+
+    const vehicles = await queryVehicles(query);
+    const data = vehicles.map((v) => v.toObject());
+
+    return response.status(200).json(data).end();
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+    return response.status(500).json({
+      message: 'Internal Server Error',
+      error: 'An unknown error occurred',
+    });
+  }
+};

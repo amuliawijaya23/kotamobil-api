@@ -6,6 +6,7 @@ import {
   getVehicleImages,
   updateVehicle,
   deleteVehicle,
+  getVehicleSales,
 } from '~/db/controllers/vehicle.controller';
 import { isAuthenticated, isVehicleOwner, multerUpload } from '~/middlewares';
 
@@ -31,6 +32,7 @@ export default (router: Router) => {
     updateVehicle,
   );
   router.post('/api/vehicle/search', isAuthenticated, searchVehicles);
+  router.post('/api/vehicle/sales', isAuthenticated, getVehicleSales);
   router.delete(
     '/api/vehicle/delete/:id',
     isAuthenticated,
