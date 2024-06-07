@@ -1,207 +1,70 @@
 import { Request, Response } from 'express';
-
+import * as vehicleActions from '~/db/actions/vehicle.action';
 import {
-  getCoverImagePresignedUrls,
+  getInventoryWithCoverImage,
   getPresignedUrls,
   uploadImages,
   removeImages,
+  getCoverImagePresignedUrls,
 } from '~/lib/S3';
+import { UserInterface } from '../models/user.model';
+import { VehicleInterface } from '../models/vehicle.model';
 
-import {
-  getUserVehicles,
-  queryVehicles,
-  createVehicle,
-  deleteVehicleById,
-  updateVehicleById,
-  getVehicleById,
-} from '~/db/actions/vehicle.action';
-
-const requiredFields = [
-  'name',
-  'vin',
-  'bodyType',
-  'make',
-  'model',
-  'year',
-  'odometer',
-  'color',
-  'condition',
-  'assembly',
-  'transmission',
-  'fuelType',
-  'price',
-  'dateAdded',
-];
-
-export const getMyVehicles = async (request: Request, response: Response) => {
+export const createVehicleController = async (
+  request: Request,
+  response: Response,
+) => {
   try {
-    const user = request.user;
+    const user = request.user as UserInterface | undefined;
 
-    if (!user) {
-      return response.status(401).json({ message: 'Not authorized' }).end();
+    const formData = { ...JSON.parse(request.body.data), ownerId: user?._id };
+
+    if (request.files) {
+      const images = request.files as Express.Multer.File[];
+      formData.images = await uploadImages(images, user?._id.toString());
     }
 
-    const vehicles = await getUserVehicles(user._id);
+    const vehicle: VehicleInterface = await vehicleActions.createVehicle(
+      formData,
+    );
 
-    if (!vehicles || vehicles.length === 0) {
-      return response.status(200).json(vehicles).end();
+    if (!vehicle.images || vehicle.images.length === 0) {
+      return response.status(200).json(vehicle).end();
     }
 
-    const inventory = vehicles.map(async (vehicle) => {
-      // deep copy the vehicle object
-      const clonedVehicle = JSON.parse(JSON.stringify(vehicle));
-
-      if (clonedVehicle.images && clonedVehicle.images.length > 0) {
-        const coverImage = await getCoverImagePresignedUrls(
-          clonedVehicle.images[0],
-        );
-        clonedVehicle.images = [coverImage];
-      }
-      return clonedVehicle;
-    });
-
-    const inventoryWithCoverImages = await Promise.all(inventory);
-
-    return response.status(200).json(inventoryWithCoverImages).end();
+    const clonedVehicle = JSON.parse(JSON.stringify(vehicle));
+    const coverImage = await getCoverImagePresignedUrls(
+      clonedVehicle.images[0],
+    );
+    clonedVehicle.images = [coverImage];
+    return response.status(200).json(clonedVehicle).end();
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      return response
-        .status(500)
-        .json({ message: 'Internal Server Error', error: error.message });
-    }
     return response.status(500).json({
       message: 'Internal Server Error',
-      error: 'An unknown error occurred',
+      error:
+        error instanceof Error ? error.message : 'An unknown error occurred',
     });
   }
 };
 
-export const getVehicleImages = async (
+export const updateVehicleController = async (
   request: Request,
   response: Response,
 ) => {
   try {
     const { id } = request.params;
-
-    const vehicle = await getVehicleById(id);
-
-    if (!vehicle) {
-      return response.status(404).json({ message: 'Vehicle not found' }).end();
-    }
-
-    if (vehicle.images.length === 0) {
-      return response
-        .status(204)
-        .json({ message: 'No images found for this vehicle' })
-        .end();
-    }
-
-    const images = await getPresignedUrls(vehicle.images);
-
-    return response.status(200).json(images).end();
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      return response
-        .status(500)
-        .json({ message: 'Internal Server Error', error: error.message });
-    }
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error: 'An unknown error occurred',
-    });
-  }
-};
-
-export const addVehicle = async (request: Request, response: Response) => {
-  try {
-    const user = request.user;
-
-    if (!user) {
-      return response.status(401).json({ message: 'Not Authorized' }).end();
-    }
-
-    const formData = { ...JSON.parse(request.body.data), ownerId: user._id };
-
-    for (const field of requiredFields) {
-      if (
-        !(field in formData) ||
-        formData[field] === null ||
-        formData[field] === undefined ||
-        formData[field] === ''
-      ) {
-        return response
-          .status(400)
-          .json({ message: `Missing parameter: ${field}` })
-          .end();
-      }
-    }
-
-    if (request.files) {
-      const images = request.files as Express.Multer.File[];
-      formData.images = await uploadImages(images, user._id);
-    }
-
-    const vehicle = await createVehicle(formData);
-    const vehicleData = { ...vehicle };
-
-    if (vehicle.images?.length > 0) {
-      vehicleData.images[0] = await getCoverImagePresignedUrls(
-        vehicle.images[0],
-      );
-    }
-
-    return response.status(200).json(vehicleData).end();
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      return response
-        .status(500)
-        .json({ message: 'Internal Server Error', error: error.message });
-    }
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error: 'An unknown error occurred',
-    });
-  }
-};
-
-export const updateVehicle = async (request: Request, response: Response) => {
-  try {
-    const { id } = request.params;
-    const user = request.user;
-
-    if (!user) {
-      return response.status(401).json({ message: 'Not Authorized' }).end();
-    }
+    const user = request.user as UserInterface | undefined;
 
     const formData = { ...JSON.parse(request.body.data) };
 
-    for (const field of requiredFields) {
-      if (
-        !(field in formData) ||
-        formData[field] === null ||
-        formData[field] === undefined ||
-        formData[field] === ''
-      ) {
-        return response
-          .status(400)
-          .json({ message: `Missing parameter: ${field}` })
-          .end();
-      }
-    }
-
     const { images, ...data } = formData;
-
     const updateParams: Record<string, any> = { $set: { ...data } };
 
-    if (formData.images && Array.isArray(formData.images)) {
-      const keys = formData.images.map(
-        (img: { key: string; url: string }) => img.key,
-      );
+    if (images && Array.isArray(images)) {
+      const keys = images.map((img: { key: string; url: string }) => img.key);
       await Promise.all([
-        updateVehicleById(id, { $pullAll: { images: keys } }),
+        vehicleActions.updateVehicle(id, { $pullAll: { images: keys } }),
         removeImages(keys),
       ]);
     }
@@ -209,61 +72,93 @@ export const updateVehicle = async (request: Request, response: Response) => {
     if (request.files && Object.keys(request.files).length > 0) {
       const uploadedImages = await uploadImages(
         request.files as Express.Multer.File[],
-        user._id,
+        user?._id.toString(),
       );
       updateParams.$push = { images: uploadedImages };
     }
 
-    const updatedVehicle = await updateVehicleById(id, updateParams);
-    const vehicleData = { ...updatedVehicle };
+    const updatedVehicle = await vehicleActions.updateVehicle(id, updateParams);
 
-    if (vehicleData.images.length > 0) {
-      vehicleData.images = await getPresignedUrls(vehicleData.images);
+    const clonedVehicle = JSON.parse(JSON.stringify(updatedVehicle));
+    if (clonedVehicle.images.length > 0) {
+      clonedVehicle.images = await getPresignedUrls(clonedVehicle.images);
     }
 
-    return response.status(200).json(vehicleData).end();
+    return response.status(200).json(clonedVehicle).end();
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      return response
-        .status(500)
-        .json({ message: 'Internal Server Error', error: error.message });
-    }
     return response.status(500).json({
       message: 'Internal Server Error',
-      error: 'An unknown error occurred',
+      error:
+        error instanceof Error ? error.message : 'An unknown error occurred',
     });
   }
 };
 
-export const deleteVehicle = async (request: Request, response: Response) => {
+export const deleteVehicleController = async (
+  request: Request,
+  response: Response,
+) => {
   try {
     const { id } = request.params;
 
-    const deletedVehicle = await deleteVehicleById(id);
+    const deletedVehicle: VehicleInterface | null =
+      await vehicleActions.deleteVehicle(id);
 
-    if (deletedVehicle.images && deletedVehicle.images.length > 0) {
+    // remove images from S3 if they exist
+    if (deletedVehicle?.images && deletedVehicle.images.length > 0) {
       await removeImages(deletedVehicle.images);
     }
 
-    return response.status(200).json(deletedVehicle).end();
+    return response
+      .status(204)
+      .json({ message: 'vehicle deleted successfully' })
+      .end();
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      return response
-        .status(500)
-        .json({ message: 'Internal Server Error', error: error.message });
-    }
     return response.status(500).json({
       message: 'Internal Server Error',
-      error: 'An unknown error occurred',
+      error:
+        error instanceof Error ? error.message : 'An unknown error occurred',
     });
   }
 };
 
-export const searchVehicles = async (request: Request, response: Response) => {
+export const getVehiclesController = async (
+  request: Request,
+  response: Response,
+) => {
   try {
-    const user = request.user;
+    const user = request.user as UserInterface | undefined;
+
+    const vehicles: VehicleInterface[] = await vehicleActions.findVehicles({
+      ownerId: user?._id,
+    });
+
+    if (vehicles.length === 0) {
+      return response.status(200).json(vehicles).end();
+    }
+
+    const inventory = await getInventoryWithCoverImage(vehicles);
+
+    return response.status(200).json(inventory).end();
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({
+      message: 'Internal Server Error',
+      error:
+        error instanceof Error ? error.message : 'An unknown error occured',
+    });
+  }
+};
+
+export const searchVehiclesController = async (
+  request: Request,
+  response: Response,
+) => {
+  try {
+    const user = request.user as UserInterface | undefined;
+
     const {
       search,
       status,
@@ -277,129 +172,89 @@ export const searchVehicles = async (request: Request, response: Response) => {
       bodyType,
       fuelType,
       transmission,
+      startDate,
+      endDate,
     } = request.body;
 
-    if (!user) {
-      response.status(401).json({ message: 'Not Authorized' }).end();
-      return;
-    }
-
-    const query: { [key: string]: any } = { ownerId: user._id.toString() };
+    const query: { [key: string]: any } = {
+      ownerId: user?._id,
+      ...(status && { sold: { $in: status.map((s: string) => s === 'Sold') } }),
+      ...(!status && { sold: true }),
+      ...(makes && { make: { $in: makes } }),
+      ...(models && { model: { $in: models } }),
+      ...(condition && { condition: { $in: condition } }),
+      ...(assembly && { assembly: { $in: assembly } }),
+      ...(bodyType && { bodyType: { $in: bodyType } }),
+      ...(fuelType && { fuelType: { $in: fuelType } }),
+      ...(transmission && { transmission: { $in: transmission } }),
+      ...(priceRange && {
+        price: { $gte: priceRange[0], $lte: priceRange[1] },
+      }),
+      ...(yearRange && { year: { $gte: yearRange[0], $lte: yearRange[1] } }),
+      ...(odometerRange && {
+        odometer: { $gte: odometerRange[0], $lte: odometerRange[1] },
+      }),
+      ...(startDate &&
+        endDate && {
+          dateSold: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        }),
+    };
 
     if (search && search.trim()) {
       query.name = { $regex: search, $options: 'i' };
     }
 
-    if (status) {
-      const sold = status.map((s: string) => (s === 'Sold' ? true : false));
-      query.sold = { $in: sold };
-    }
-
-    if (makes) {
-      query.make = { $in: makes };
-    }
-
-    if (models) {
-      query.model = { $in: models };
-    }
-
-    if (priceRange.length == 2) {
-      query.price = { $gte: priceRange[0], $lte: priceRange[1] };
-    }
-
-    if (yearRange.length == 2) {
-      query.year = { $gte: yearRange[0], $lte: yearRange[1] };
-    }
-
-    if (odometerRange.length == 2) {
-      query.odometer = { $gte: odometerRange[0], $lte: odometerRange[1] };
-    }
-
-    if (condition) {
-      query.condition = { $in: condition };
-    }
-
-    if (assembly) {
-      query.assembly = { $in: assembly };
-    }
-
-    if (bodyType) {
-      query.bodyType = { $in: bodyType };
-    }
-
-    if (fuelType) {
-      query.fuelType = { $in: fuelType };
-    }
-
-    if (transmission) {
-      query.transmission = { $in: transmission };
-    }
-
-    const vehicles = await queryVehicles(query);
-
-    const inventory = await Promise.all(
-      vehicles.map(async (vehicle) => {
-        if (vehicle.images && vehicle.images.length > 0) {
-          const coverImage = await getCoverImagePresignedUrls(
-            vehicle.images[0],
-          );
-          return { ...vehicle.toObject(), images: [coverImage] };
-        }
-        return vehicle.toObject();
-      }),
+    const vehicles: VehicleInterface[] = await vehicleActions.findVehicles(
+      query,
     );
+
+    if (vehicles.length === 0 || (startDate && endDate)) {
+      return response.status(200).json(vehicles).end();
+    }
+
+    const inventory = await getInventoryWithCoverImage(vehicles);
 
     return response.status(200).json(inventory).end();
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      return response
-        .status(500)
-        .json({ message: 'Internal Server Error', error: error.message });
-    }
     return response.status(500).json({
       message: 'Internal Server Error',
-      error: 'An unknown error occurred',
+      error:
+        error instanceof Error ? error.message : 'An unknown error occured',
     });
   }
 };
 
-export const getVehicleSales = async (request: Request, response: Response) => {
+export const getVehicleImagesController = async (
+  request: Request,
+  response: Response,
+) => {
   try {
-    const user = request.user;
+    const { id } = request.params;
 
-    if (!user) {
-      response.status(401).json({ message: 'Not Authorized' }).end();
-      return;
+    const vehicle: VehicleInterface | null =
+      await vehicleActions.findVehicleById(id);
+
+    if (!vehicle) {
+      return response.status(404).json({ message: 'Vehicle not found' }).end();
     }
 
-    const { startDate, endDate } = request.body;
-
-    if (!startDate || !endDate) {
-      response.status(400).json({ message: 'Missing parameter' }).end();
-      return;
+    if (!vehicle.images || vehicle.images.length === 0) {
+      return response
+        .status(204)
+        .json({ message: 'No images found for this vehicle' })
+        .end();
     }
 
-    const query: { [key: string]: any } = {
-      ownerId: user._id.toString(),
-      sold: true,
-      dateSold: { $gte: startDate, $lte: endDate },
-    };
+    const images = await getPresignedUrls(vehicle.images);
 
-    const vehicles = await queryVehicles(query);
-    const data = vehicles.map((v) => v.toObject());
-
-    return response.status(200).json(data).end();
+    return response.status(200).json(images).end();
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      return response
-        .status(500)
-        .json({ message: 'Internal Server Error', error: error.message });
-    }
     return response.status(500).json({
       message: 'Internal Server Error',
-      error: 'An unknown error occurred',
+      error:
+        error instanceof Error ? error.message : 'An unknown error occured',
     });
   }
 };

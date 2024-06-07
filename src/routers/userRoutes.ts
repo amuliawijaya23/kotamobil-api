@@ -1,19 +1,28 @@
+import passport from 'passport';
 import { Router } from 'express';
-
 import {
-  register,
-  deleteUser,
-  updateUser,
+  registerUser,
+  getUserProfile,
+  logoutUser,
+  updateUserProfile,
+  deleteUserProfile,
 } from '~/db/controllers/user.controller';
-
-import { login, logout } from '~/auth/index';
-
-import { isAuthenticated, isNotAuthenticated } from '../middlewares';
+import {
+  validateLogin,
+  isAuthenticated,
+  isNotAuthenticated,
+} from '../middlewares';
 
 export default (router: Router) => {
-  router.post('/api/auth/register', isNotAuthenticated, register);
-  router.post('/api/auth/login', isNotAuthenticated, login);
-  router.delete('/api/auth/logout', isAuthenticated, logout);
-  router.delete('/api/auth/delete/:id', isAuthenticated, deleteUser);
-  router.patch('/api/auth/update/:id', isAuthenticated, updateUser);
+  router.post('/api/auth/register', isNotAuthenticated, registerUser);
+  router.post(
+    '/api/auth/login',
+    isNotAuthenticated,
+    validateLogin,
+    passport.authenticate('local', { session: true }),
+    getUserProfile,
+  );
+  router.delete('/api/auth/logout', isAuthenticated, logoutUser);
+  router.delete('/api/auth/delete', isAuthenticated, deleteUserProfile);
+  router.patch('/api/auth/update', isAuthenticated, updateUserProfile);
 };

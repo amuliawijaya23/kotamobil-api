@@ -8,6 +8,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import sharp from 'sharp';
 
 import { randomChar } from './helpers';
+import { VehicleInterface } from '~/db/models/vehicle.model';
 
 export const bucketName = process.env.BUCKET_NAME || '';
 const bucketRegion = process.env.BUCKET_REGION || '';
@@ -27,6 +28,25 @@ export const getCoverImagePresignedUrls = async (image: string) => {
   const command = new GetObjectCommand(getImageParam);
   const imageUrl = await getSignedUrl(S3, command, { expiresIn: 24 * 60 * 60 });
   return { key: image, url: imageUrl };
+};
+
+export const getInventoryWithCoverImage = async (
+  vehicles: VehicleInterface[],
+) => {
+  const inventoryWithCoverImage = await Promise.all(
+    vehicles.map(async (vehicle: VehicleInterface) => {
+      const clonedVehicle = JSON.parse(JSON.stringify(vehicle));
+
+      if (clonedVehicle.images && clonedVehicle.images.length > 0) {
+        const coverImage = await getCoverImagePresignedUrls(
+          clonedVehicle.images[0],
+        );
+        clonedVehicle.images = [coverImage];
+      }
+      return clonedVehicle;
+    }),
+  );
+  return inventoryWithCoverImage;
 };
 
 export const getPresignedUrls = async (images: string[]) => {
@@ -68,7 +88,7 @@ export const uploadImages = async (
   return vehicleImages;
 };
 
-export const removeImages = async (images: string) => {
+export const removeImages = async (images: string[]) => {
   for (const image of images) {
     const params = {
       Bucket: bucketName,
