@@ -44,10 +44,7 @@ export const getMyVehicles = async (request: Request, response: Response) => {
     const vehicles = await getUserVehicles(user._id);
 
     if (!vehicles || vehicles.length === 0) {
-      return response
-        .status(404)
-        .json({ message: 'No vehicles found for this user' })
-        .end();
+      return response.status(200).json(vehicles).end();
     }
 
     const inventory = vehicles.map(async (vehicle) => {
