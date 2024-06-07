@@ -1,21 +1,55 @@
-import User from '~/db/models/user.model';
+import User, { UserInterface } from '~/db/models/user.model';
 
-const getUsers = () => User.find();
-const getUserByEmail = (email: string) => User.findOne({ email });
-const getUserById = (id: string) => User.findById(id);
-const createUser = (values: Record<string, any>) =>
-  new User(values).save().then((user: Record<string, any>) => user.toObject());
-const deleteUserById = (id: string) => User.findOneAndDelete({ _id: id });
-const updateUserById = (id: string, values: Record<string, any>) =>
-  User.findOneAndUpdate({ _id: id }, values).then((user: Record<string, any>) =>
-    user.toObject(),
-  );
+export const createUser = async (
+  userData: Partial<UserInterface>,
+): Promise<UserInterface> => {
+  try {
+    return (await new User(userData).save()).toObject() as UserInterface;
+  } catch (error) {
+    throw new Error(`Error creating user: ${error}`);
+  }
+};
 
-export {
-  getUsers,
-  getUserByEmail,
-  getUserById,
-  createUser,
-  deleteUserById,
-  updateUserById,
+export const findUserByEmail = async (
+  email: string,
+): Promise<UserInterface | null> => {
+  try {
+    return (await User.findOne({ email }).exec()) as UserInterface;
+  } catch (error) {
+    throw new Error(`Error finding user by email: ${error}`);
+  }
+};
+
+export const findUserById = async (
+  id: string,
+): Promise<UserInterface | null> => {
+  try {
+    const user = await User.findById(id).exec();
+    return user ? (user.toObject() as UserInterface) : null;
+  } catch (error) {
+    throw new Error(`Error finding user by id: ${error}`);
+  }
+};
+
+export const updateUser = async (
+  id: string,
+  updateData: Partial<UserInterface>,
+): Promise<UserInterface | null> => {
+  try {
+    const user = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).exec();
+    return user ? (user.toObject() as UserInterface) : null;
+  } catch (error) {
+    throw new Error(`Error updating user: ${error}`);
+  }
+};
+
+export const deleteUser = async (id: string): Promise<UserInterface | null> => {
+  try {
+    const user = await User.findByIdAndDelete(id).exec();
+    return user ? (user.toObject() as UserInterface) : null;
+  } catch (error) {
+    throw new Error(`Error deleting user: ${error}`);
+  }
 };

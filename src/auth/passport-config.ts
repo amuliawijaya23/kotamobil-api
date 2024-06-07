@@ -1,47 +1,32 @@
 import passport from 'passport';
 import Local from 'passport-local';
-import bcrypt from 'bcrypt';
 
-import { getUserByEmail, getUserById } from '~/db/actions/user.action';
+import { findUserByEmail, findUserById } from '~/db/actions/user.action';
+import { UserInterface } from '~/db/models/user.model';
 
 const LocalStrategy = Local.Strategy;
-
-declare global {
-  namespace Express {
-    interface User {
-      _id: string;
-      password?: string;
-    }
-  }
-}
 
 const initializePassport = () => {
   passport.use(
     new LocalStrategy(
       { usernameField: 'email' },
-      async (email: string, password: string, done: Function) => {
+      async (email, password, done) => {
         try {
-          if (!email || !password) {
-            return done('Missing required Parameter', false, {
-              message: 'Missing required parameter',
-            });
-          }
-
-          const user = await getUserByEmail(email).select('+password');
+          const user = await findUserByEmail(email);
 
           if (!user) {
-            return done('Invalid credentials', false, {
-              message: 'No user found with that email',
-            });
+            return done(null, false, { message: 'Invalid credentials' });
           }
 
-          if (!(await bcrypt.compare(password, user.password))) {
-            return done('Invalid Credentials', false, {
-              message: 'Incorrect password',
-            });
+          const isMatch = await (user as UserInterface).comparePassword(
+            password,
+          );
+
+          if (!isMatch) {
+            return done(null, false, { message: 'Invalid credentials' });
           }
 
-          return done(null, user.toObject());
+          return done(null, (user as UserInterface).toObject());
         } catch (error) {
           return done(error);
         }
@@ -49,12 +34,17 @@ const initializePassport = () => {
     ),
   );
 
-  passport.serializeUser((user: Record<string, any>, done: Function) => {
-    return done(null, user._id.toString());
+  passport.serializeUser((user, done) => {
+    done(null, (user as UserInterface)._id);
   });
 
-  passport.deserializeUser(async (id: string, done: Function) => {
-    return done(null, await getUserById(id));
+  passport.deserializeUser(async (id: string, done) => {
+    try {
+      const user = await findUserById(id);
+      return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
   });
 };
 export default initializePassport;

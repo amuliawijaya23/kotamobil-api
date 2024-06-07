@@ -8,6 +8,7 @@ import {
   queryContacts,
 } from '../actions/contact.action';
 import { queryVehicles } from '../actions/vehicle.action';
+import { UserInterface } from '../models/user.model';
 
 export const getMyContacts = async (request: Request, response: Response) => {
   try {
@@ -17,7 +18,7 @@ export const getMyContacts = async (request: Request, response: Response) => {
       return response.status(401).json({ message: 'Not Authorized' }).end();
     }
 
-    const contacts = await getUserContacts(user._id);
+    const contacts = await getUserContacts((user as UserInterface)._id);
 
     return response.status(200).json(contacts).end();
   } catch (error) {
@@ -51,7 +52,10 @@ export const addContact = async (request: Request, response: Response) => {
         .end();
     }
 
-    const contact = await createContact({ ...data, ownerId: user._id });
+    const contact = await createContact({
+      ...data,
+      ownerId: (user as UserInterface)._id,
+    });
 
     return response.status(200).json(contact).end();
   } catch (error) {
@@ -163,7 +167,7 @@ export const searchContacts = async (request: Request, response: Response) => {
     }
 
     const query: { [key: string]: any } = {
-      ownerId: user._id.toString(),
+      ownerId: (user as UserInterface)._id.toString(),
     };
 
     if (search) {

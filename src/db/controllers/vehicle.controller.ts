@@ -15,6 +15,7 @@ import {
   updateVehicleById,
   getVehicleById,
 } from '~/db/actions/vehicle.action';
+import { UserInterface } from '../models/user.model';
 
 const requiredFields = [
   'name',
@@ -41,7 +42,7 @@ export const getMyVehicles = async (request: Request, response: Response) => {
       return response.status(401).json({ message: 'Not authorized' }).end();
     }
 
-    const vehicles = await getUserVehicles(user._id);
+    const vehicles = await getUserVehicles((user as UserInterface)._id);
 
     if (!vehicles || vehicles.length === 0) {
       return response.status(200).json(vehicles).end();
@@ -122,7 +123,10 @@ export const addVehicle = async (request: Request, response: Response) => {
       return response.status(401).json({ message: 'Not Authorized' }).end();
     }
 
-    const formData = { ...JSON.parse(request.body.data), ownerId: user._id };
+    const formData = {
+      ...JSON.parse(request.body.data),
+      ownerId: (user as UserInterface)._id,
+    };
 
     for (const field of requiredFields) {
       if (
@@ -140,7 +144,7 @@ export const addVehicle = async (request: Request, response: Response) => {
 
     if (request.files) {
       const images = request.files as Express.Multer.File[];
-      formData.images = await uploadImages(images, user._id);
+      formData.images = await uploadImages(images, (user as UserInterface)._id);
     }
 
     const vehicle = await createVehicle(formData);
@@ -209,7 +213,7 @@ export const updateVehicle = async (request: Request, response: Response) => {
     if (request.files && Object.keys(request.files).length > 0) {
       const uploadedImages = await uploadImages(
         request.files as Express.Multer.File[],
-        user._id,
+        (user as UserInterface)._id,
       );
       updateParams.$push = { images: uploadedImages };
     }
@@ -284,7 +288,9 @@ export const searchVehicles = async (request: Request, response: Response) => {
       return;
     }
 
-    const query: { [key: string]: any } = { ownerId: user._id.toString() };
+    const query: { [key: string]: any } = {
+      ownerId: (user as UserInterface)._id.toString(),
+    };
 
     if (search && search.trim()) {
       query.name = { $regex: search, $options: 'i' };
@@ -381,7 +387,7 @@ export const getVehicleSales = async (request: Request, response: Response) => {
     }
 
     const query: { [key: string]: any } = {
-      ownerId: user._id.toString(),
+      ownerId: (user as UserInterface)._id.toString(),
       sold: true,
       dateSold: { $gte: startDate, $lte: endDate },
     };

@@ -3,9 +3,27 @@ import multer from 'multer';
 import { getVehicleById } from '~/db/actions/vehicle.action';
 import dotenv from 'dotenv';
 import { getContactById } from '~/db/actions/contact.action';
+import { UserInterface } from '~/db/models/user.model';
 dotenv.config();
 
 const COOKIE_NAME = process.env.COOKIE_NAME || 'SESSION';
+
+export const validateLogin = (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { email, password } = request.body;
+
+  if (!email || !password) {
+    return response
+      .status(400)
+      .json({ message: 'Missing required parameters' })
+      .end();
+  }
+
+  next();
+};
 
 export const isAuthenticated = async (
   request: Request,
@@ -67,7 +85,7 @@ export const isVehicleOwner = async (
         .end();
     }
 
-    if (vehicle.ownerId !== user?._id.toString()) {
+    if (vehicle.ownerId !== (user as UserInterface)?._id.toString()) {
       return response.status(401).json({ message: 'Not Authorized' }).end();
     }
 
@@ -103,7 +121,7 @@ export const isContactOwner = async (
         .end();
     }
 
-    if (contact.ownerId !== user?._id.toString()) {
+    if (contact.ownerId !== (user as UserInterface)?._id.toString()) {
       return response.status(401).json({ message: 'Not Authorized' }).end();
     }
 
