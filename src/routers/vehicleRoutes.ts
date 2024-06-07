@@ -1,42 +1,54 @@
 import { Router } from 'express';
 import {
-  addVehicle,
-  getMyVehicles,
-  searchVehicles,
-  getVehicleImages,
-  updateVehicle,
-  deleteVehicle,
-  getVehicleSales,
+  createVehicleController,
+  getVehiclesController,
+  searchVehiclesController,
+  getVehicleImagesController,
+  updateVehicleController,
+  deleteVehicleController,
 } from '~/db/controllers/vehicle.controller';
-import { isAuthenticated, isVehicleOwner, multerUpload } from '~/middlewares';
+import {
+  isAuthenticated,
+  validateFormData,
+  validateSearchParams,
+  isVehicleOwner,
+  multerUpload,
+} from '~/middlewares';
 
 export default (router: Router) => {
   router.post(
     '/api/vehicle/add',
     multerUpload.array('images', 10),
     isAuthenticated,
-    addVehicle,
-  );
-  router.get('/api/vehicle', isAuthenticated, getMyVehicles);
-  router.get(
-    '/api/vehicle/images/:id',
-    isAuthenticated,
-    isVehicleOwner,
-    getVehicleImages,
+    validateFormData,
+    createVehicleController,
   );
   router.post(
     '/api/vehicle/update/:id',
     multerUpload.array('images', 10),
     isAuthenticated,
     isVehicleOwner,
-    updateVehicle,
+    validateFormData,
+    updateVehicleController,
   );
-  router.post('/api/vehicle/search', isAuthenticated, searchVehicles);
-  router.post('/api/vehicle/sales', isAuthenticated, getVehicleSales);
+  router.get('/api/vehicle', isAuthenticated, getVehiclesController);
+  router.get(
+    '/api/vehicle/images/:id',
+    isAuthenticated,
+    isVehicleOwner,
+    getVehicleImagesController,
+  );
+  router.post(
+    '/api/vehicle/search',
+    isAuthenticated,
+    validateSearchParams,
+    searchVehiclesController,
+  );
+  router.post('/api/vehicle/sales', isAuthenticated, searchVehiclesController);
   router.delete(
     '/api/vehicle/delete/:id',
     isAuthenticated,
     isVehicleOwner,
-    deleteVehicle,
+    deleteVehicleController,
   );
 };

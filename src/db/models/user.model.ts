@@ -24,7 +24,16 @@ const userSchema = new Schema<UserInterface>(
     lastName: { type: String },
     picture: { type: String },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        ret._id = ret._id.toString();
+        delete ret.__v;
+        return ret;
+      },
+    },
+  },
 );
 
 userSchema.pre<UserInterface>('save', async function (next) {

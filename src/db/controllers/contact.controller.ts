@@ -7,7 +7,7 @@ import {
   updateContactById,
   queryContacts,
 } from '../actions/contact.action';
-import { queryVehicles } from '../actions/vehicle.action';
+import * as vehicleActions from '../actions/vehicle.action';
 import { UserInterface } from '../models/user.model';
 
 export const getMyContacts = async (request: Request, response: Response) => {
@@ -83,7 +83,7 @@ export const deleteContact = async (request: Request, response: Response) => {
         .end();
     }
 
-    const associatedVehicles = await queryVehicles({
+    const associatedVehicles = await vehicleActions.findVehicles({
       buyerId: { $in: contactIds },
     });
 

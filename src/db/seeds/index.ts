@@ -1,6 +1,7 @@
 import mongoose, { connect } from 'mongoose';
-import Vehicle from '../models/vehicle.model';
+import Vehicle, { VehicleInterface } from '../models/vehicle.model';
 import Contact from '../models/contact.model';
+import * as vehicleActions from '~/db/actions/vehicle.action';
 import dotenv from 'dotenv';
 
 import vehicleSeed from './vehicleSeed';

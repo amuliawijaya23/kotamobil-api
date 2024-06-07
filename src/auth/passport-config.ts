@@ -26,7 +26,7 @@ const initializePassport = () => {
             return done(null, false, { message: 'Invalid credentials' });
           }
 
-          return done(null, (user as UserInterface).toObject());
+          return done(null, (user as UserInterface).toJSON());
         } catch (error) {
           return done(error);
         }
