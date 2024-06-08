@@ -1,9 +1,6 @@
 import mongoose from 'mongoose';
 import Vehicle, { VehicleInterface } from '~/db/models/vehicle.model';
-
-const convertToObjectId = (id: string): mongoose.Types.ObjectId => {
-  return new mongoose.Types.ObjectId(id);
-};
+import { convertToObjectId } from '~/lib/helpers';
 
 export const createVehicle = async (
   vehicleData: Partial<VehicleInterface>,

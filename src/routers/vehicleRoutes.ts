@@ -9,7 +9,7 @@ import {
 } from '~/db/controllers/vehicle.controller';
 import {
   isAuthenticated,
-  validateFormData,
+  validateVehicleFormData,
   validateSearchParams,
   isVehicleOwner,
   multerUpload,
@@ -20,7 +20,7 @@ export default (router: Router) => {
     '/api/vehicle/add',
     multerUpload.array('images', 10),
     isAuthenticated,
-    validateFormData,
+    validateVehicleFormData,
     createVehicleController,
   );
   router.post(
@@ -28,7 +28,7 @@ export default (router: Router) => {
     multerUpload.array('images', 10),
     isAuthenticated,
     isVehicleOwner,
-    validateFormData,
+    validateVehicleFormData,
     updateVehicleController,
   );
   router.get('/api/vehicle', isAuthenticated, getVehiclesController);

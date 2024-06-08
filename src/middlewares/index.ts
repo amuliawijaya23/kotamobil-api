@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
-import dotenv from 'dotenv';
 import * as vehicleActions from '~/db/actions/vehicle.action';
-import { VehicleInterface } from '~/db/models/vehicle.model';
+import * as contactActions from '~/db/actions/contact.action';
 import { UserInterface } from '~/db/models/user.model';
-import { getContactById } from '~/db/actions/contact.action';
+import { convertToObjectId } from '~/lib/helpers';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const COOKIE_NAME = process.env.COOKIE_NAME || 'SESSION';
@@ -47,11 +47,14 @@ export const validateLogin = (
     next();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
 };
 
@@ -70,11 +73,14 @@ export const isAuthenticated = async (
     return next();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
 };
 
@@ -90,15 +96,18 @@ export const isNotAuthenticated = async (
     return next();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
 };
 
-export const validateFormData = (
+export const validateVehicleFormData = (
   request: Request,
   response: Response,
   next: NextFunction,
@@ -117,11 +126,14 @@ export const validateFormData = (
     next();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
 };
 
@@ -178,11 +190,14 @@ export const validateSearchParams = (
     next();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
 };
 
@@ -215,11 +230,107 @@ export const isVehicleOwner = async (
     next();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
+  }
+};
+
+export const validateContactFormData = (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const data = { ...request.body };
+
+    if (!data.firstName || !data.mobile) {
+      return response
+        .status(400)
+        .json({ message: 'Missing required parameters' })
+        .end();
+    }
+    next();
+  } catch (error) {
+    console.error(error);
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
+  }
+};
+
+export const validateDeleteContactRequest = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const user = request.user as UserInterface | undefined;
+    const { contactIds } = request.body;
+
+    if (!Array.isArray(contactIds) || contactIds.length === 0) {
+      console.log('Not Array!');
+      return response
+        .status(400)
+        .json({ message: 'Invalid ids provided' })
+        .end();
+    }
+
+    const contactsToDelete = await contactActions.findContacts({
+      _id: { $in: contactIds },
+      ownerId: user?._id,
     });
+
+    if (contactsToDelete.length !== contactIds.length) {
+      return response
+        .status(404)
+        .json({ message: 'Some contacts not found or not authorized' })
+        .end();
+    }
+
+    const objectIds = contactIds.map(convertToObjectId);
+
+    const associatedVehicles = await vehicleActions.findVehicles({
+      buyerId: { $in: objectIds },
+    });
+
+    if (associatedVehicles.length > 0) {
+      const associatedBuyerIds = associatedVehicles.map(
+        (vehicle) => vehicle.buyerId,
+      );
+      const associatedVehicleIds = associatedVehicles.map(
+        (vehicle) => vehicle._id,
+      );
+
+      return response.status(400).json({
+        message:
+          'Cannot delete contacts. They are associated with vehicles in the inventory. Please update the vehicle buyer information before deleting',
+        associatedBuyerIds,
+        associatedVehicleIds,
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error(error);
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
 };
 
@@ -239,16 +350,13 @@ export const isContactOwner = async (
         .end();
     }
 
-    const contact = await getContactById(id);
+    const contact = await contactActions.findContactById(id);
 
     if (!contact) {
-      return response
-        .status(400)
-        .json({ message: 'No vehicle with that id' })
-        .end();
+      return response.status(404).json({ message: 'Contact not found' }).end();
     }
 
-    if (contact.ownerId !== user?._id.toString()) {
+    if (contact.ownerId !== user?._id) {
       return response.status(401).json({ message: 'Not Authorized' }).end();
     }
 

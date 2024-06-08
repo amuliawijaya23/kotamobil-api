@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import * as UserActions from '~/db/actions/user.action';
 import { UserInterface } from '../models/user.model';
+import passport from 'passport';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -42,20 +43,24 @@ export const registerUser = async (request: Request, response: Response) => {
   }
 };
 
-export const getUserProfile = async (request: Request, response: Response) => {
-  const userId = (request.user as UserInterface)._id;
+export const loginUser = (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  passport.authenticate(
+    'local',
+    { session: true },
+    (error: Error, user: UserInterface) => {
+      if (error) {
+        return response.status(401).json({ message: error }).end();
+      }
 
-  if (!userId) {
-    return response.status(401).json({ message: 'Not authorized' }).end();
-  }
-
-  const user = await UserActions.findUserById(userId);
-
-  if (!user) {
-    return response.status(404).json({ message: 'User not found' }).end();
-  }
-
-  return response.status(200).json({ isAuthenticated: true, user }).end();
+      request.login(user, async () => {
+        return response.status(200).json(user).end();
+      });
+    },
+  )(request, response, next);
 };
 
 export const logoutUser = (
@@ -78,6 +83,22 @@ export const logoutUser = (
         .end();
     });
   });
+};
+
+export const getUserProfile = async (request: Request, response: Response) => {
+  const userId = (request.user as UserInterface)._id;
+
+  if (!userId) {
+    return response.status(401).json({ message: 'Not authorized' }).end();
+  }
+
+  const user = await UserActions.findUserById(userId);
+
+  if (!user) {
+    return response.status(404).json({ message: 'User not found' }).end();
+  }
+
+  return response.status(200).json(user).end();
 };
 
 export const updateUserProfile = async (

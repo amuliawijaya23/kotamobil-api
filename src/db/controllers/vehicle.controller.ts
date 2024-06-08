@@ -37,14 +37,17 @@ export const createVehicleController = async (
       clonedVehicle.images[0],
     );
     clonedVehicle.images = [coverImage];
-    return response.status(200).json(clonedVehicle).end();
+    return response.status(201).json(clonedVehicle).end();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
 };
 
@@ -87,11 +90,14 @@ export const updateVehicleController = async (
     return response.status(200).json(clonedVehicle).end();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
 };
 
@@ -111,16 +117,19 @@ export const deleteVehicleController = async (
     }
 
     return response
-      .status(204)
+      .status(200)
       .json({ message: 'vehicle deleted successfully' })
       .end();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occurred',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
 };
 
@@ -144,11 +153,14 @@ export const getVehiclesController = async (
     return response.status(200).json(inventory).end();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occured',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occured',
+      })
+      .end();
   }
 };
 
@@ -217,11 +229,14 @@ export const searchVehiclesController = async (
     return response.status(200).json(inventory).end();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occured',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occured',
+      })
+      .end();
   }
 };
 
@@ -251,10 +266,13 @@ export const getVehicleImagesController = async (
     return response.status(200).json(images).end();
   } catch (error) {
     console.error(error);
-    return response.status(500).json({
-      message: 'Internal Server Error',
-      error:
-        error instanceof Error ? error.message : 'An unknown error occured',
-    });
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occured',
+      })
+      .end();
   }
 };

@@ -15,7 +15,9 @@ const initializePassport = () => {
           const user = await findUserByEmail(email);
 
           if (!user) {
-            return done(null, false, { message: 'Invalid credentials' });
+            return done('Invalid credentials', false, {
+              message: 'Invalid credentials',
+            });
           }
 
           const isMatch = await (user as UserInterface).comparePassword(
@@ -23,7 +25,9 @@ const initializePassport = () => {
           );
 
           if (!isMatch) {
-            return done(null, false, { message: 'Invalid credentials' });
+            return done('Invalid credentials', false, {
+              message: 'Invalid credentials',
+            });
           }
 
           return done(null, (user as UserInterface).toJSON());

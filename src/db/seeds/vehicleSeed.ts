@@ -902,7 +902,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Mon May 15 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0ccc'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad8'),
     marketPrice: 1850000000,
     purchasePrice: 1700000000,
     specification: ['4WD', 'Leather Seats', 'Navigation System'],
@@ -935,7 +935,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Wed Jun 14 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0ccd'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad1'),
     marketPrice: 1550000000,
     purchasePrice: 1400000000,
     specification: ['Panoramic Sunroof', 'All-Wheel Drive', 'Bluetooth'],
@@ -968,7 +968,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Tue Aug 01 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cce'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad2'),
     marketPrice: 1350000000,
     purchasePrice: 1200000000,
     specification: ['All-Wheel Drive', 'Sunroof', 'Parking Sensors'],
@@ -1001,7 +1001,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Fri Sep 01 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0ccf'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad3'),
     marketPrice: 1750000000,
     purchasePrice: 1600000000,
     specification: ['Adaptive Cruise Control', 'Heated Seats', 'Premium Audio'],
@@ -1034,7 +1034,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Wed Mar 20 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cd0'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad4'),
     marketPrice: 1950000000,
     purchasePrice: 1800000000,
     specification: ['Autopilot', 'Glass Roof', 'Wireless Charging'],
@@ -1067,7 +1067,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Sat Apr 01 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cd1'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad5'),
     marketPrice: 610000000,
     purchasePrice: 570000000,
     specification: ['Rearview Camera', 'Bluetooth', 'Lane Departure Warning'],
@@ -1100,7 +1100,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Mon Jun 05 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cd2'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad6'),
     marketPrice: 1450000000,
     purchasePrice: 1300000000,
     specification: ['4WD', 'Tow Package', 'Third Row Seating'],
@@ -1133,7 +1133,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Sun Jul 30 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cd3'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad7'),
     marketPrice: 1250000000,
     purchasePrice: 1100000000,
     specification: ['4WD', 'Sunroof', 'Heated Seats'],
@@ -1166,7 +1166,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Mon Jul 24 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0ccc'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad8'),
     marketPrice: 1650000000,
     purchasePrice: 1500000000,
     specification: [
@@ -1203,7 +1203,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Tue Jun 13 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0ccd'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad1'),
     marketPrice: 2200000000,
     purchasePrice: 2000000000,
     specification: [
@@ -1240,7 +1240,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Mon May 29 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cce'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad2'),
     marketPrice: 1750000000,
     purchasePrice: 1600000000,
     specification: [
@@ -1277,7 +1277,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Thu Jul 13 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0ccf'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad3'),
     marketPrice: 2100000000,
     purchasePrice: 1900000000,
     specification: [
@@ -1314,7 +1314,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Tue Jul 25 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cd0'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad4'),
     marketPrice: 1250000000,
     purchasePrice: 1100000000,
     specification: [
@@ -1351,7 +1351,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Fri Aug 18 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cd1'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad5'),
     marketPrice: 1450000000,
     purchasePrice: 1300000000,
     specification: ['All-Wheel Drive', 'Heated Seats', 'Premium Sound System'],
@@ -1384,7 +1384,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Sun Aug 13 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cd2'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad6'),
     marketPrice: 1550000000,
     purchasePrice: 1400000000,
     specification: ['4WD', 'Third Row Seating', 'Bluetooth'],
@@ -1417,7 +1417,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Tue Jun 27 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0cd3'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad7'),
     marketPrice: 1150000000,
     purchasePrice: 1000000000,
     specification: ['All-Wheel Drive', 'Heated Seats', 'Rearview Camera'],
@@ -1450,7 +1450,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Wed May 17 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0ccc'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad8'),
     marketPrice: 2550000000,
     purchasePrice: 2400000000,
     specification: ['4WD', 'Panoramic Sunroof', 'Leather Seats'],
@@ -1483,7 +1483,7 @@ const vehicleSeed: Partial<VehicleInterface>[] = [
     dateSold: new Date(
       'Mon Jul 10 2023 07:00:00 GMT+0700 (Western Indonesia Time)',
     ),
-    buyerId: new mongoose.Types.ObjectId('665b69bbcb57ee27c31a0ccd'),
+    buyerId: new mongoose.Types.ObjectId('66647b3a8b7a5d8d5e035ad1'),
     marketPrice: 1850000000,
     purchasePrice: 1700000000,
     specification: ['Hybrid Engine', 'Leather Seats', 'Navigation System'],
