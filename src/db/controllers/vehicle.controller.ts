@@ -118,7 +118,7 @@ export const deleteVehicleController = async (
 
     return response
       .status(200)
-      .json({ message: 'vehicle deleted successfully' })
+      .json({ message: 'Vehicle deleted successfully' })
       .end();
   } catch (error) {
     console.error(error);
