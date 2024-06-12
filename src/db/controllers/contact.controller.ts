@@ -111,13 +111,6 @@ export const searchContactsController = async (
     const user = request.user;
     const { search } = request.body;
 
-    if (!search) {
-      return response
-        .status(400)
-        .json({ message: 'Missing required parameter' })
-        .end();
-    }
-
     const query: { [key: string]: any } = {
       ownerId: (user as UserInterface)._id,
       $or: [

@@ -308,6 +308,7 @@ export const validateDeleteContactRequest = async (
       const associatedBuyerIds = associatedVehicles.map(
         (vehicle) => vehicle.buyerId,
       );
+      const uniqueBuyers = [...new Set(associatedBuyerIds)];
       const associatedVehicleIds = associatedVehicles.map(
         (vehicle) => vehicle._id,
       );
@@ -315,7 +316,7 @@ export const validateDeleteContactRequest = async (
       return response.status(400).json({
         message:
           'Cannot delete contacts. They are associated with vehicles in the inventory. Please update the vehicle buyer information before deleting',
-        associatedBuyerIds,
+        associatedBuyerIds: uniqueBuyers,
         associatedVehicleIds,
       });
     }
