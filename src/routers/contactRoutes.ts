@@ -7,7 +7,7 @@ import {
   searchContactsController,
 } from '~/db/controllers/contact.controller';
 import {
-  isAuthenticated,
+  isAuthenticatedAndVerified,
   isContactOwner,
   validateContactFormData,
   validateDeleteContactRequest,
@@ -16,23 +16,31 @@ import {
 export default (router: Router) => {
   router.post(
     '/api/contact/add',
-    isAuthenticated,
+    isAuthenticatedAndVerified,
     validateContactFormData,
     createContactController,
   );
   router.post(
     '/api/contact/update/:id',
-    isAuthenticated,
+    isAuthenticatedAndVerified,
     isContactOwner,
     validateContactFormData,
     updateContactController,
   );
   router.post(
     '/api/contact/delete',
-    isAuthenticated,
+    isAuthenticatedAndVerified,
     validateDeleteContactRequest,
     deleteContactsController,
   );
-  router.get('/api/contact', isAuthenticated, getUserContactsController);
-  router.post('/api/contact/search', isAuthenticated, searchContactsController);
+  router.get(
+    '/api/contact',
+    isAuthenticatedAndVerified,
+    getUserContactsController,
+  );
+  router.post(
+    '/api/contact/search',
+    isAuthenticatedAndVerified,
+    searchContactsController,
+  );
 };

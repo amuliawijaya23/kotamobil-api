@@ -20,6 +20,17 @@ export const findUserByEmail = async (
   }
 };
 
+export const findUserByVerificationToken = async (
+  verificationToken: string,
+): Promise<UserInterface | null> => {
+  try {
+    const user = await User.findOne({ verificationToken }).exec();
+    return user ? (user.toJSON() as UserInterface) : null;
+  } catch (error) {
+    throw new Error(`Error finding user by verification token: ${error}`);
+  }
+};
+
 export const findUserById = async (
   id: string,
 ): Promise<UserInterface | null> => {
@@ -33,11 +44,12 @@ export const findUserById = async (
 
 export const updateUser = async (
   id: string,
-  updateData: Partial<UserInterface>,
+  updateData: Record<string, any>,
 ): Promise<UserInterface | null> => {
   try {
     const user = await User.findByIdAndUpdate(id, updateData, {
-      new: true,
+      returnOriginal: false,
+      returnDocument: 'after',
     }).exec();
     return user ? (user.toJSON() as UserInterface) : null;
   } catch (error) {

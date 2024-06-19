@@ -1,13 +1,19 @@
 import { NextFunction, Request, Response } from 'express';
 import * as UserActions from '~/db/actions/user.action';
-import { UserInterface } from '../models/user.model';
+import User, { UserInterface } from '../models/user.model';
 import passport from 'passport';
 import dotenv from 'dotenv';
+import { sendVerificationEmail } from '~/lib/nodemailer';
+import { randomChar } from '~/lib/helpers';
 dotenv.config();
 
 const COOKIE_NAME = process.env.COOKIE_NAME || 'SESSION';
 
-export const registerUser = async (request: Request, response: Response) => {
+export const registerUser = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
   try {
     const { email, password, firstName, lastName } = request.body;
 
@@ -24,14 +30,115 @@ export const registerUser = async (request: Request, response: Response) => {
       return response.status(400).json({ message: 'User already exist' }).end();
     }
 
+    const verificationToken = randomChar(32);
+
     const user = await UserActions.createUser({
       email,
       password,
       firstName,
       lastName,
+      isVerified: false,
+      verificationToken: verificationToken,
     });
 
-    return response.status(201).json(user).end();
+    await sendVerificationEmail({
+      id: verificationToken,
+      email: email,
+      userId: user._id,
+    });
+
+    request.login(user, (error) => {
+      if (error) {
+        next(error);
+      }
+      return response.status(201).json(user).end();
+    });
+  } catch (error) {
+    return response
+      .status(500)
+      .json({
+        message:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
+  }
+};
+
+export const sendVerification = async (
+  request: Request,
+  response: Response,
+) => {
+  try {
+    const { userId } = request.body;
+
+    if (!userId) {
+      return response
+        .status(400)
+        .json({ message: 'Missing required parameters' })
+        .end();
+    }
+
+    const user = await UserActions.findUserById(userId);
+
+    if (!user) {
+      return response.status(404).json({ message: 'User not found' }).end();
+    }
+
+    if (user.isVerified) {
+      return response
+        .status(400)
+        .json({ message: 'User is already verified' })
+        .end();
+    }
+
+    const verificationToken = randomChar(32);
+    await UserActions.updateUser(userId, {
+      verificationToken,
+    });
+
+    sendVerificationEmail({
+      id: verificationToken,
+      userId: user._id,
+      email: user.email,
+    });
+    response.status(200).json({ message: 'Verification email sent' }).end();
+  } catch (error) {
+    return response
+      .status(500)
+      .json({
+        message:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
+  }
+};
+
+export const verifyUser = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { id } = request.params;
+  try {
+    const user = await UserActions.findUserByVerificationToken(id);
+    if (!user) {
+      return response
+        .status(400)
+        .json({ message: 'Invalid or expired token' })
+        .end();
+    }
+
+    const updatedUser = await UserActions.updateUser(user._id, {
+      $set: { isVerified: true },
+      $unset: { verificationToken: 1 },
+    });
+
+    request.login(updatedUser as UserInterface, (error) => {
+      if (error) {
+        next(error);
+      }
+      return response.status(200).json(updatedUser).end();
+    });
   } catch (error) {
     return response
       .status(500)

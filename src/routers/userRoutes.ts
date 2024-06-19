@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import {
   registerUser,
+  verifyUser,
   loginUser,
   logoutUser,
   updateUserProfile,
   deleteUserProfile,
+  sendVerification,
 } from '~/db/controllers/user.controller';
 import {
   validateLogin,
@@ -13,6 +15,8 @@ import {
 } from '../middlewares';
 
 export default (router: Router) => {
+  router.get('/api/auth/verify/:id', verifyUser);
+  router.post('/api/auth/send-verification', sendVerification);
   router.post('/api/auth/register', isNotAuthenticated, registerUser);
   router.post('/api/auth/login', isNotAuthenticated, validateLogin, loginUser);
   router.delete('/api/auth/logout', isAuthenticated, logoutUser);

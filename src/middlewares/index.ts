@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
+import * as userActions from '~/db/actions/user.action';
 import * as vehicleActions from '~/db/actions/vehicle.action';
 import * as contactActions from '~/db/actions/contact.action';
 import { UserInterface } from '~/db/models/user.model';
@@ -71,6 +72,41 @@ export const isAuthenticated = async (
       return response.status(401).json({ message: 'Unauthorized' }).end();
     }
     return next();
+  } catch (error) {
+    console.error(error);
+    return response
+      .status(500)
+      .json({
+        message: 'Internal Server Error',
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
+  }
+};
+
+export const isAuthenticatedAndVerified = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const user = request.user as UserInterface | undefined;
+  try {
+    if (!request.isAuthenticated() || !user) {
+      if (request.cookies.COOKIE_NAME) {
+        response.clearCookie(COOKIE_NAME);
+      }
+      return response.status(401).json({ message: 'Unauthorized' }).end();
+    }
+
+    if (!user || !user.isVerified) {
+      return response
+        .status(403)
+        .json({ message: 'Please verify your email to proceed' })
+        .end();
+    }
+
+    next();
   } catch (error) {
     console.error(error);
     return response
