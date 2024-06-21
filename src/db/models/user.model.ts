@@ -9,6 +9,7 @@ export interface UserInterface extends Document {
   lastName?: string;
   picture?: string;
   verificationToken?: string;
+  passwordResetToken?: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -26,15 +27,11 @@ const userSchema = new Schema<UserInterface>(
     isVerified: { type: Boolean, required: true, default: false },
     lastName: { type: String },
     picture: { type: String },
-    verificationToken: {
-      type: String,
-      expires: new Date(Date.now() + 6 * 60 * 60 * 1000),
-    },
   },
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
+      transform: function (_doc, ret) {
         ret._id = ret._id.toString();
         delete ret.password;
         delete ret.__v;

@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import * as UserActions from '~/db/actions/user.action';
-import User, { UserInterface } from '../models/user.model';
+import * as VerificationTokenActions from '~/db/actions/verificationToken.action';
+import * as PasswordResetTokenActions from '~/db/actions/passwordResetToken.action';
+import { UserInterface } from '../models/user.model';
+import { VerificationTokenInterface } from '../models/verificationToken.model';
+import { PasswordResetTokenInterface } from '../models/passwordResetToken.model';
 import passport from 'passport';
 import dotenv from 'dotenv';
 import { sendVerificationEmail } from '~/lib/nodemailer';
@@ -30,19 +34,19 @@ export const registerUser = async (
       return response.status(400).json({ message: 'User already exist' }).end();
     }
 
-    const verificationToken = randomChar(32);
-
     const user = await UserActions.createUser({
       email,
       password,
       firstName,
       lastName,
       isVerified: false,
-      verificationToken: verificationToken,
     });
 
+    const verificationToken =
+      await VerificationTokenActions.createVerificationToken(user._id);
+
     await sendVerificationEmail({
-      id: verificationToken,
+      id: verificationToken.token,
       email: email,
       userId: user._id,
     });
@@ -91,13 +95,12 @@ export const sendVerification = async (
         .end();
     }
 
-    const verificationToken = randomChar(32);
-    await UserActions.updateUser(userId, {
-      verificationToken,
-    });
+    await VerificationTokenActions.deleteUserVerificationToken(userId);
+    const verificationToken =
+      await VerificationTokenActions.createVerificationToken(userId);
 
     sendVerificationEmail({
-      id: verificationToken,
+      id: verificationToken.token,
       userId: user._id,
       email: user.email,
     });
@@ -120,18 +123,31 @@ export const verifyUser = async (
 ) => {
   const { id } = request.params;
   try {
-    const user = await UserActions.findUserByVerificationToken(id);
-    if (!user) {
+    const verificationToken =
+      await VerificationTokenActions.findVerificationToken(id);
+
+    if (!verificationToken) {
       return response
         .status(400)
         .json({ message: 'Invalid or expired token' })
         .end();
     }
 
-    const updatedUser = await UserActions.updateUser(user._id, {
-      $set: { isVerified: true },
-      $unset: { verificationToken: 1 },
-    });
+    const updatedUser = await UserActions.updateUser(
+      verificationToken.userId.toString(),
+      {
+        $set: { isVerified: true },
+      },
+    );
+
+    if (!updatedUser) {
+      return response
+        .status(400)
+        .json({ message: 'Invalid or expired token' })
+        .end();
+    }
+
+    await VerificationTokenActions.deleteUserVerificationToken(updatedUser._id);
 
     request.login(updatedUser as UserInterface, (error) => {
       if (error) {
