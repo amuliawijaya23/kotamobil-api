@@ -194,18 +194,27 @@ export const logoutUser = (
 
 export const getUserProfile = async (request: Request, response: Response) => {
   const userId = (request.user as UserInterface)._id;
+  try {
+    if (!userId) {
+      return response.status(401).json({ message: 'Not authorized' }).end();
+    }
 
-  if (!userId) {
-    return response.status(401).json({ message: 'Not authorized' }).end();
+    const user = await UserActions.findUserById(userId);
+
+    if (!user) {
+      return response.status(404).json({ message: 'User not found' }).end();
+    }
+
+    return response.status(200).json(user).end();
+  } catch (error) {
+    return response
+      .status(500)
+      .json({
+        message:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
   }
-
-  const user = await UserActions.findUserById(userId);
-
-  if (!user) {
-    return response.status(404).json({ message: 'User not found' }).end();
-  }
-
-  return response.status(200).json(user).end();
 };
 
 export const updateUserProfile = async (

@@ -7,15 +7,22 @@ import {
   updateUserProfile,
   deleteUserProfile,
   sendVerification,
+  getUserProfile,
 } from '~/db/controllers/user.controller';
 import {
   validateLogin,
   isAuthenticated,
+  isAuthenticatedAndVerified,
   isNotAuthenticated,
 } from '../middlewares';
 
 export default (router: Router) => {
   router.get('/api/auth/verify/:id', verifyUser);
+  router.get(
+    '/api/auth/verify-session',
+    isAuthenticatedAndVerified,
+    getUserProfile,
+  );
   router.post('/api/auth/send-verification', sendVerification);
   router.post('/api/auth/register', isNotAuthenticated, registerUser);
   router.post('/api/auth/login', isNotAuthenticated, validateLogin, loginUser);

@@ -92,10 +92,8 @@ export const isAuthenticatedAndVerified = async (
 ) => {
   const user = request.user as UserInterface | undefined;
   try {
-    if (!request.isAuthenticated() || !user) {
-      if (request.cookies.COOKIE_NAME) {
-        response.clearCookie(COOKIE_NAME);
-      }
+    if (!request.isAuthenticated()) {
+      response.clearCookie(COOKIE_NAME);
       return response.status(401).json({ message: 'Unauthorized' }).end();
     }
 

@@ -9,7 +9,7 @@ import router from './routers';
 import flash from 'express-flash';
 import session from 'express-session';
 import passport from 'passport';
-
+import MongoStore from 'connect-mongo';
 import dbConnect from './db';
 import initializePassport from '~/auth/passport-config';
 
@@ -19,12 +19,14 @@ dotenv.config();
 const PORT = process.env.PORT || 8080;
 const SESSION_SECRET = process.env.SESSION_SECRET || 'SECRET';
 const COOKIE_NAME = process.env.COOKIE_NAME || 'SESSION';
+const MONGODB_URL = process.env.MONGODB_URL;
 const env = process.env.NODE_ENV || 'development';
 const isLocal = env === 'development';
 
 async function startServer() {
   try {
     const api = express();
+    await dbConnect();
 
     api.use(cors({ credentials: true }));
     api.use(morgan('dev'));
@@ -45,6 +47,11 @@ async function startServer() {
         },
         resave: false,
         saveUninitialized: false,
+        store: MongoStore.create({
+          mongoUrl: MONGODB_URL,
+          collectionName: 'sessions',
+          ttl: 24 * 60 * 60,
+        }),
       }),
     );
     api.use(passport.initialize());
@@ -60,8 +67,6 @@ async function startServer() {
     server.listen(PORT, () => {
       console.log(`Server running on PORT: ${PORT}`);
     });
-
-    await dbConnect();
   } catch (error) {
     throw new Error(`Server Error: ${error}`);
   }
