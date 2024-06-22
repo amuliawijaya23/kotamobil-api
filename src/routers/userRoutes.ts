@@ -8,6 +8,8 @@ import {
   deleteUserProfile,
   sendVerification,
   getUserProfile,
+  sendResetPassword,
+  resetPassword,
 } from '~/db/controllers/user.controller';
 import {
   validateLogin,
@@ -24,6 +26,16 @@ export default (router: Router) => {
     getUserProfile,
   );
   router.post('/api/auth/send-verification', sendVerification);
+  router.post(
+    '/api/auth/send-password-reset',
+    isNotAuthenticated,
+    sendResetPassword,
+  );
+  router.post(
+    '/api/auth/reset-password/:token',
+    isNotAuthenticated,
+    resetPassword,
+  );
   router.post('/api/auth/register', isNotAuthenticated, registerUser);
   router.post('/api/auth/login', isNotAuthenticated, validateLogin, loginUser);
   router.delete('/api/auth/logout', isAuthenticated, logoutUser);

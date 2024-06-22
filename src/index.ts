@@ -26,7 +26,6 @@ const isLocal = env === 'development';
 async function startServer() {
   try {
     const api = express();
-    await dbConnect();
 
     api.use(cors({ credentials: true }));
     api.use(morgan('dev'));
@@ -61,6 +60,8 @@ async function startServer() {
     initializePassport();
 
     api.use(router());
+
+    await dbConnect();
 
     const server = http.createServer(api);
 
