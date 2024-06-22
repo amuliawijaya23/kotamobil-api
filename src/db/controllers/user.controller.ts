@@ -1,9 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
+import User from '../models/user.model';
 import * as UserActions from '~/db/actions/user.action';
-import User, { UserInterface } from '../models/user.model';
+import * as VerificationTokenActions from '~/db/actions/verificationToken.action';
+import * as PasswordResetTokenActions from '~/db/actions/passwordResetToken.action';
+import { UserInterface } from '../models/user.model';
+import { VerificationTokenInterface } from '../models/verificationToken.model';
+import { PasswordResetTokenInterface } from '../models/passwordResetToken.model';
 import passport from 'passport';
 import dotenv from 'dotenv';
-import { sendVerificationEmail } from '~/lib/nodemailer';
+import {
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+} from '~/lib/nodemailer';
 import { randomChar } from '~/lib/helpers';
 dotenv.config();
 
@@ -30,19 +38,19 @@ export const registerUser = async (
       return response.status(400).json({ message: 'User already exist' }).end();
     }
 
-    const verificationToken = randomChar(32);
-
     const user = await UserActions.createUser({
       email,
       password,
       firstName,
       lastName,
       isVerified: false,
-      verificationToken: verificationToken,
     });
 
+    const verificationToken =
+      await VerificationTokenActions.createVerificationToken(user._id);
+
     await sendVerificationEmail({
-      id: verificationToken,
+      id: verificationToken.token,
       email: email,
       userId: user._id,
     });
@@ -53,6 +61,55 @@ export const registerUser = async (
       }
       return response.status(201).json(user).end();
     });
+  } catch (error) {
+    return response
+      .status(500)
+      .json({
+        message:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
+  }
+};
+
+export const sendResetPassword = async (
+  request: Request,
+  response: Response,
+) => {
+  try {
+    const { email } = request.body;
+
+    if (!email) {
+      return response
+        .status(400)
+        .json({ message: 'Missing required parameters' })
+        .end();
+    }
+
+    const user = await UserActions.findUserByEmail(email);
+
+    if (!user) {
+      return response.status(404).json({ message: 'User not found' }).end();
+    }
+
+    await PasswordResetTokenActions.deleteUserPasswordResetToken(
+      user._id.toString(),
+    );
+
+    const passwordResetToken: PasswordResetTokenInterface =
+      await PasswordResetTokenActions.createPasswordResetToken(
+        user._id.toString(),
+      );
+
+    sendPasswordResetEmail({
+      id: passwordResetToken.token,
+      email: email,
+    });
+
+    return response
+      .status(200)
+      .json({ message: 'Password reset email sent' })
+      .end();
   } catch (error) {
     return response
       .status(500)
@@ -91,17 +148,60 @@ export const sendVerification = async (
         .end();
     }
 
-    const verificationToken = randomChar(32);
-    await UserActions.updateUser(userId, {
-      verificationToken,
-    });
+    await VerificationTokenActions.deleteUserVerificationToken(userId);
+    const verificationToken: VerificationTokenInterface =
+      await VerificationTokenActions.createVerificationToken(userId);
 
     sendVerificationEmail({
-      id: verificationToken,
+      id: verificationToken.token,
       userId: user._id,
       email: user.email,
     });
-    response.status(200).json({ message: 'Verification email sent' }).end();
+
+    return response
+      .status(200)
+      .json({ message: 'Verification email sent' })
+      .end();
+  } catch (error) {
+    return response
+      .status(500)
+      .json({
+        message:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      })
+      .end();
+  }
+};
+
+export const resetPassword = async (request: Request, response: Response) => {
+  const { token } = request.params;
+  const { password } = request.body;
+
+  try {
+    const passwordResetToken: PasswordResetTokenInterface | null =
+      await PasswordResetTokenActions.findPasswordResetToken(token);
+
+    if (!passwordResetToken) {
+      return response
+        .status(400)
+        .json({ message: 'Invalid or expired token' })
+        .end();
+    }
+
+    const user = await User.findOne({ _id: passwordResetToken.userId });
+
+    if (!user) {
+      return response
+        .status(400)
+        .json({ message: 'Invalid or expired token' })
+        .end();
+    }
+
+    user.password = password;
+    const userData = (await user.save()).toJSON();
+
+    await PasswordResetTokenActions.deleteUserPasswordResetToken(userData._id);
+    return response.status(200).json(userData).end();
   } catch (error) {
     return response
       .status(500)
@@ -120,18 +220,31 @@ export const verifyUser = async (
 ) => {
   const { id } = request.params;
   try {
-    const user = await UserActions.findUserByVerificationToken(id);
-    if (!user) {
+    const verificationToken: VerificationTokenInterface | null =
+      await VerificationTokenActions.findVerificationToken(id);
+
+    if (!verificationToken) {
       return response
         .status(400)
         .json({ message: 'Invalid or expired token' })
         .end();
     }
 
-    const updatedUser = await UserActions.updateUser(user._id, {
-      $set: { isVerified: true },
-      $unset: { verificationToken: 1 },
-    });
+    const updatedUser = await UserActions.updateUser(
+      verificationToken.userId.toString(),
+      {
+        $set: { isVerified: true },
+      },
+    );
+
+    if (!updatedUser) {
+      return response
+        .status(400)
+        .json({ message: 'Invalid or expired token' })
+        .end();
+    }
+
+    await VerificationTokenActions.deleteUserVerificationToken(updatedUser._id);
 
     request.login(updatedUser as UserInterface, (error) => {
       if (error) {

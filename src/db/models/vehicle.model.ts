@@ -96,7 +96,7 @@ export const vehicleSchema = new Schema<VehicleInterface>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
+      transform: function (_doc, ret) {
         ret._id = ret._id.toString();
         ret.ownerId = ret.ownerId.toString();
         if (ret.buyerId) ret.buyerId = ret.buyerId.toString();

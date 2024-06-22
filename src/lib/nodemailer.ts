@@ -44,3 +44,19 @@ export const sendVerificationEmail = async ({
   };
   await transporter.sendMail(mailOptions);
 };
+
+export const sendPasswordResetEmail = async ({
+  id,
+  email,
+}: {
+  id: string;
+  email: string;
+}) => {
+  const mailOptions = {
+    from: NODEMAILER_AUTH_EMAIL,
+    to: email,
+    subject: 'Reset your Password',
+    html: `<p>You requested to reset your password at Kota Mobil</p><p>If you did not make this request, please ignore this email.</p><p>Click <a href=${CLIENT_URL}/reset-password/${id}>here</a> to reset your password.</p>`,
+  };
+  await transporter.sendMail(mailOptions);
+};

@@ -31,7 +31,7 @@ export const contactSchema = new Schema<ContactInterface>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
+      transform: function (_doc, ret) {
         ret._id = ret._id.toString();
         ret.ownerId = ret.ownerId.toString();
         delete ret.__v;
