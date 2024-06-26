@@ -72,7 +72,7 @@ export const uploadImages = async (
     const imageName = randomChar(16);
 
     const buffer = await sharp(image.buffer)
-      .resize({ height: 1080, width: 1350, fit: 'contain' })
+      .resize({ height: 1440, width: 1080, fit: 'cover' })
       .toBuffer();
     const params = {
       Bucket: bucketName,
