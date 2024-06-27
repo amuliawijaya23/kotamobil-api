@@ -10,24 +10,6 @@ const NODEMAILER_AUTH_EMAIL = process.env.NODEMAILER_AUTH_EMAIL;
 const NODEMAILER_AUTH_PASS = process.env.NODEMAILER_AUTH_PASS;
 const CLIENT_URL = process.env.CLIENT_URL;
 
-let transporter = nodemailer.createTransport({
-  host: NODEMAILER_HOST,
-  port: Number(NODEMAILER_PORT),
-  secure: true,
-  auth: {
-    user: NODEMAILER_AUTH_EMAIL,
-    pass: NODEMAILER_AUTH_PASS,
-  },
-});
-
-transporter.verify((error, success) => {
-  if (error) {
-    throw new Error(`Error creating nodemailer transporter: ${error}`);
-  } else {
-    console.log(`Transporter created: ${success}, Ready for messages`);
-  }
-});
-
 export const sendVerificationEmail = async ({
   id,
   userId,
@@ -39,6 +21,24 @@ export const sendVerificationEmail = async ({
   email: string;
   firstName: string;
 }) => {
+  let transporter = nodemailer.createTransport({
+    host: NODEMAILER_HOST,
+    port: Number(NODEMAILER_PORT),
+    secure: true,
+    auth: {
+      user: NODEMAILER_AUTH_EMAIL,
+      pass: NODEMAILER_AUTH_PASS,
+    },
+  });
+
+  transporter.verify((error, success) => {
+    if (error) {
+      throw new Error(`Error creating nodemailer transporter: ${error}`);
+    } else {
+      console.log(`Transporter created: ${success}, Ready for messages`);
+    }
+  });
+
   const template = fs.readFileSync('./src/lib/templates/verify.html', 'utf8');
   const imageAttachment = fs.readFileSync('./src/assets/kotamobil-light.png');
 
@@ -73,6 +73,24 @@ export const sendPasswordResetEmail = async ({
   email: string;
   firstName: string;
 }) => {
+  let transporter = nodemailer.createTransport({
+    host: NODEMAILER_HOST,
+    port: Number(NODEMAILER_PORT),
+    secure: true,
+    auth: {
+      user: NODEMAILER_AUTH_EMAIL,
+      pass: NODEMAILER_AUTH_PASS,
+    },
+  });
+
+  transporter.verify((error, success) => {
+    if (error) {
+      throw new Error(`Error creating nodemailer transporter: ${error}`);
+    } else {
+      console.log(`Transporter created: ${success}, Ready for messages`);
+    }
+  });
+
   const template = fs.readFileSync('./src/lib/templates/reset.html', 'utf8');
   const imageAttachment = fs.readFileSync('./src/assets/kotamobil-light.png');
 
