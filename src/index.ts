@@ -60,6 +60,7 @@ async function startServer() {
     initializePassport();
 
     api.use(router());
+    api.use(express.static('public'));
 
     await dbConnect();
 
