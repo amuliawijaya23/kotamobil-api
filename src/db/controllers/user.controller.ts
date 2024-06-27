@@ -51,6 +51,7 @@ export const registerUser = async (
 
     await sendVerificationEmail({
       id: verificationToken.token,
+      firstName: user.firstName,
       email: email,
       userId: user._id,
     });
@@ -103,6 +104,7 @@ export const sendResetPassword = async (
 
     sendPasswordResetEmail({
       id: passwordResetToken.token,
+      firstName: user.firstName,
       email: email,
     });
 
@@ -154,6 +156,7 @@ export const sendVerification = async (
 
     sendVerificationEmail({
       id: verificationToken.token,
+      firstName: user.firstName,
       userId: user._id,
       email: user.email,
     });

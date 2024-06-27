@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
+import mustache from 'mustache';
+import fs from 'fs';
 dotenv.config();
 
 const NODEMAILER_HOST = process.env.NODEMAILER_HOST;
@@ -9,10 +11,9 @@ const NODEMAILER_AUTH_PASS = process.env.NODEMAILER_AUTH_PASS;
 const CLIENT_URL = process.env.CLIENT_URL;
 
 let transporter = nodemailer.createTransport({
-  service: 'gmail',
-  // host: NODEMAILER_HOST,
-  // port: Number(NODEMAILER_PORT),
-  // secure: true,
+  host: NODEMAILER_HOST,
+  port: Number(NODEMAILER_PORT),
+  secure: true,
   auth: {
     user: NODEMAILER_AUTH_EMAIL,
     pass: NODEMAILER_AUTH_PASS,
@@ -31,16 +32,34 @@ export const sendVerificationEmail = async ({
   id,
   userId,
   email,
+  firstName,
 }: {
   id: string;
   userId: string;
   email: string;
+  firstName: string;
 }) => {
+  const template = fs.readFileSync('./src/lib/templates/verify.html', 'utf8');
+  const imageAttachment = fs.readFileSync('./src/assets/kotamobil-light.png');
+
   const mailOptions = {
     from: NODEMAILER_AUTH_EMAIL,
     to: email,
     subject: 'Verify your Email',
-    html: `<p>Please verify your email address to complete the registration process and sign in to your account.</p><p>This verification link <b>expires in 6 hours</b>.</p><p>Click <a href=${CLIENT_URL}/verify/${userId}/${id}>here</a> to proceed.</p>`,
+    html: mustache.render(template, {
+      firstName: firstName,
+      url: CLIENT_URL,
+      id: id,
+      userId: userId,
+    }),
+    attachments: [
+      {
+        filename: 'kotamobil-light.png',
+        content: imageAttachment,
+        encoding: 'base64',
+        cid: 'logo',
+      },
+    ],
   };
   await transporter.sendMail(mailOptions);
 };
@@ -48,15 +67,32 @@ export const sendVerificationEmail = async ({
 export const sendPasswordResetEmail = async ({
   id,
   email,
+  firstName,
 }: {
   id: string;
   email: string;
+  firstName: string;
 }) => {
+  const template = fs.readFileSync('./src/lib/templates/reset.html', 'utf8');
+  const imageAttachment = fs.readFileSync('./src/assets/kotamobil-light.png');
+
   const mailOptions = {
     from: NODEMAILER_AUTH_EMAIL,
     to: email,
     subject: 'Reset your Password',
-    html: `<p>You requested to reset your password at Kota Mobil</p><p>If you did not make this request, please ignore this email.</p><p>Click <a href=${CLIENT_URL}/reset-password/${id}>here</a> to reset your password.</p>`,
+    html: mustache.render(template, {
+      firstName: firstName,
+      url: CLIENT_URL,
+      id: id,
+    }),
+    attachments: [
+      {
+        filename: 'kotamobil-light.png',
+        content: imageAttachment,
+        encoding: 'base64',
+        cid: 'logo',
+      },
+    ],
   };
   await transporter.sendMail(mailOptions);
 };
