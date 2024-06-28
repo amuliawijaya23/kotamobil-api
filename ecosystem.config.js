@@ -8,7 +8,7 @@ module.exports = {
   deploy: {
     production: {
       user: 'ubuntu',
-      host: 'ec2-54-255-187-207.ap-southeast-1.compute.amazonaws.com',
+      host: 'ec2-13-215-48-201.ap-southeast-1.compute.amazonaws.com',
       key: '~/.ssh/kota-mobil-api-key.pem',
       ref: 'origin/main',
       repo: 'git@github.com:amuliawijaya23/kotamobil-api.git',
