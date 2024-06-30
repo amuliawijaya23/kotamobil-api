@@ -45,7 +45,7 @@ export const sendVerificationEmail = async ({
   const mailOptions = {
     from: NODEMAILER_AUTH_EMAIL,
     to: email,
-    subject: 'Verify your Email',
+    subject: 'Verify your email',
     html: mustache.render(template, {
       firstName: firstName,
       url: CLIENT_URL,
@@ -97,7 +97,7 @@ export const sendPasswordResetEmail = async ({
   const mailOptions = {
     from: NODEMAILER_AUTH_EMAIL,
     to: email,
-    subject: 'Reset your Password',
+    subject: 'Reset your password',
     html: mustache.render(template, {
       firstName: firstName,
       url: CLIENT_URL,
